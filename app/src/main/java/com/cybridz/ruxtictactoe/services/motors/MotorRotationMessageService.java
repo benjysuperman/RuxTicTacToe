@@ -16,7 +16,7 @@ public class MotorRotationMessageService {
 
     public void sendRandomMotorRotation() {
         int rotationType = RotationType.getRandom();
-        Log.d("com.cybridz.ruxspotify.launch", "the rotation type is : " + rotationType);
+        // Log.d("com.cybridz.ruxspotify.launch", "the rotation type is : " + rotationType);
         AntennaMessage antennaMessage = new AntennaMessage();
         antennaMessage.set(rotationType, 1, 9, 90);
         robotService.robotAntennaMotion(antennaMessage);
