@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.cybridz.AbstractActivity;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -22,7 +23,7 @@ public class GameActivity extends AbstractActivity {
     private Button back_button;
 
     private static Map<String, View> cells;
-    private static int[][] grid;
+    private static Integer[][] grid;
 
     private static final int UNSET = 0;
 
@@ -74,19 +75,62 @@ public class GameActivity extends AbstractActivity {
     }
 
     private boolean checkGameOver() {
-        boolean is_game_over = false;
-        for (int i=0; i < 3; i++){
-            for (int j=0; j < 3; j++){
-
-            }
-        }
+        /* TODO */
+        return false;
     }
 
     private void setUpGame(){
         cells = new HashMap<>();
-        grid = new int[3][3];
+        grid = new Integer[3][3];
         emptyBoard();
+        for (int i = 0; i < grid.length; i++){
+            Log.d(LOGGER_KEY, "Rows " + i + " : " + Arrays.asList(grid[i]));
+        }
+        boardColumnsWin();
         pickRandomPlayers();
+        Log.d(LOGGER_KEY, "Rows : " + Arrays.asList(checkRowForWin()));
+        Log.d(LOGGER_KEY, "Columns : " +  Arrays.asList(checkColumnForWin()));
+        Log.d(LOGGER_KEY, "Diagonale : " + checkDiagonalForWin());
+        Log.d(LOGGER_KEY, "Inverse diagonale : " + checkInverseDiagonalForWin());
+    }
+
+    private void boardRowWin(){
+        ((TextView) cells.get("cell_10")).setText("X");
+        ((TextView) cells.get("cell_11")).setText("X");
+        ((TextView) cells.get("cell_12")).setText("X");
+        grid[1][0] = X;
+        grid[1][1] = X;
+        grid[1][2] = X;
+    }
+
+    private void boardColumnsWin(){
+        ((TextView) cells.get("cell_01")).setText("X");
+        ((TextView) cells.get("cell_11")).setText("X");
+        ((TextView) cells.get("cell_21")).setText("X");
+        ((TextView) cells.get("cell_00")).setText("O");
+        ((TextView) cells.get("cell_12")).setText("O");
+        ((TextView) cells.get("cell_22")).setText("O");
+        grid[0][1] = X;
+        grid[1][1] = X;
+        grid[2][1] = X;
+    }
+
+    private void boardDiagonalWin(){
+        ((TextView) cells.get("cell_00")).setText("X");
+        ((TextView) cells.get("cell_11")).setText("X");
+        ((TextView) cells.get("cell_22")).setText("X");
+        grid[0][0] = X;
+        grid[1][1] = X;
+        grid[2][2] = X;
+    }
+
+    private void boardInverseDiagonalWin(){
+        ((TextView) cells.get("cell_02")).setText("X");
+        ((TextView) cells.get("cell_11")).setText("X");
+        ((TextView) cells.get("cell_20")).setText("X");
+        grid[0][2] = X;
+        grid[1][1] = X;
+        grid[2][0] = X;
     }
 
     private void pickRandomPlayers() {
@@ -99,8 +143,8 @@ public class GameActivity extends AbstractActivity {
     }
 
     private void emptyBoard(){
-        for (int i=0; i < 3; i++){
-            for (int j=0; j < 3; j++){
+        for (int i=0; i < grid.length; i++){
+            for (int j=0; j < grid[i].length; j++){
                 String cellID = "cell_" + i + j;
                 int resID = getResources().getIdentifier(cellID, "id", getPackageName());
                 TextView cell = findViewById(resID);
@@ -115,28 +159,28 @@ public class GameActivity extends AbstractActivity {
         startActivity(new Intent(GameActivity.this, StartActivity.class));
     }
 
-    public static int[] checkRowForWin(){
-        int[] lines = new int[3];
-        lines[0] = grid[0][0] === grid[0][1] === grid[0][2] ? grid[0][0] : -1;
-        lines[1] = grid[1][0] === grid[1][1] === grid[1][2] ? grid[1][0] : -1;
-        lines[2] = grid[2][0] === grid[2][1] === grid[2][2] ? grid[2][0] : -1;
+    public static Integer[] checkRowForWin(){
+        Integer[] lines = new Integer[3];
+        lines[0] = grid[0][0] == grid[0][1] && grid[0][1] == grid[0][2] ? grid[0][0] : UNSET;
+        lines[1] = grid[1][0] == grid[1][1] && grid[1][1] == grid[1][2] ? grid[1][0] : UNSET;
+        lines[2] = grid[2][0] == grid[2][1] && grid[2][1] == grid[2][2] ? grid[2][0] : UNSET;
         return lines;
     }
 
-    public static int checkColumnForWin(){
-        int[] columns = new int[3];
-        columns[0] = grid[0][0] === grid[1][0] === grid[2][0] ? grid[0][0] : -1;
-        columns[1] = grid[0][1] === grid[1][1] === grid[2][1] ? grid[0][1] : -1;
-        columns[2] = grid[0][2] === grid[1][2] === grid[2][2] ? grid[0][2] : -1;
+    public static Integer[] checkColumnForWin(){
+        Integer[] columns = new Integer[3];
+        columns[0] = grid[0][0] == grid[1][0] && grid[1][0] == grid[2][0] ? grid[0][0] : UNSET;
+        columns[1] = grid[0][1] == grid[1][1] && grid[1][1] == grid[2][1] ? grid[0][1] : UNSET;
+        columns[2] = grid[0][2] == grid[1][2] && grid[1][2] == grid[2][2] ? grid[0][2] : UNSET;
         return columns;
     }
 
-    public static int checkDiagonalForWin(){
-        return grid[0][0] === grid[1][1] === grid[2][2] ? return grid[0][0];
+    public static Integer checkDiagonalForWin(){
+        return grid[0][0] == grid[1][1] &&  grid[1][1] == grid[2][2] ? grid[0][0] : UNSET;
     }
 
-    public static int checkInverseDiagonalForWin(){
-        return grid[0][2] === grid[1][1] === grid[2][0] ? return grid[0][2];
+    public static Integer checkInverseDiagonalForWin(){
+        return grid[0][2] == grid[1][1] && grid[1][1] == grid[2][0] ? grid[0][2] : UNSET;
     }
 
     @Override
