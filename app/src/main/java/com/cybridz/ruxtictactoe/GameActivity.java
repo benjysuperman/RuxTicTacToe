@@ -30,6 +30,8 @@ public class GameActivity extends AbstractActivity {
 
     private static final int X = 2;
 
+    private static int round = 1;
+
     private static int current_player;
 
     private static int rux_player_number;
@@ -60,8 +62,9 @@ public class GameActivity extends AbstractActivity {
         }
     }
 
-    private void rux_plays(){
 
+
+    private void rux_plays(){
         checkGameOver();
         current_player = opponent_player_number;
     }
@@ -112,8 +115,32 @@ public class GameActivity extends AbstractActivity {
         startActivity(new Intent(GameActivity.this, StartActivity.class));
     }
 
+    public static int[] checkRowForWin(){
+        int[] lines = new int[3];
+        lines[0] = grid[0][0] === grid[0][1] === grid[0][2] ? grid[0][0] : -1;
+        lines[1] = grid[1][0] === grid[1][1] === grid[1][2] ? grid[1][0] : -1;
+        lines[2] = grid[2][0] === grid[2][1] === grid[2][2] ? grid[2][0] : -1;
+        return lines;
+    }
+
+    public static int checkColumnForWin(){
+        int[] columns = new int[3];
+        columns[0] = grid[0][0] === grid[1][0] === grid[2][0] ? grid[0][0] : -1;
+        columns[1] = grid[0][1] === grid[1][1] === grid[2][1] ? grid[0][1] : -1;
+        columns[2] = grid[0][2] === grid[1][2] === grid[2][2] ? grid[0][2] : -1;
+        return columns;
+    }
+
+    public static int checkDiagonalForWin(){
+        return grid[0][0] === grid[1][1] === grid[2][2] ? return grid[0][0];
+    }
+
+    public static int checkInverseDiagonalForWin(){
+        return grid[0][2] === grid[1][1] === grid[2][0] ? return grid[0][2];
+    }
+
     @Override
     public void play() {
-        Log.d(LOGGER_KEY, "In game activity");
+
     }
 }
