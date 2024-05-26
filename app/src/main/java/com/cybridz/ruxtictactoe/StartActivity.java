@@ -18,6 +18,7 @@ public class StartActivity extends AbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_activity);
+        current_view = findViewById(R.id.start_activity);
         initializeServicesIfNeeded();
         start_button = findViewById(R.id.start_game);
         start_button.setText("Start");

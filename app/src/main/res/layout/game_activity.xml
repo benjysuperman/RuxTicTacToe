@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/game_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:maxHeight="640dp"
@@ -23,176 +24,184 @@
 
         <TableRow
             android:layout_width="362dp"
-            android:gravity="center"
             android:layout_height="120dp"
-            >
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/cell_00"
                 android:layout_width="120dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:textSize="60sp"
-                android:text="X" />
+                android:text="X"
+                android:textSize="60sp" />
 
             <View
-                android:layout_height="120dp"
                 android:layout_width="1dp"
+                android:layout_height="120dp"
                 android:background="#FF909090" />
 
             <TextView
                 android:id="@+id/cell_01"
                 android:layout_width="120dp"
                 android:layout_height="match_parent"
-                android:textSize="60sp"
                 android:gravity="center"
-                android:text="" />
+                android:text=""
+                android:textSize="60sp" />
 
             <View
-                android:layout_height="120dp"
                 android:layout_width="1dp"
+                android:layout_height="120dp"
                 android:background="#FF909090" />
 
             <TextView
                 android:id="@+id/cell_02"
                 android:layout_width="120dp"
                 android:layout_height="match_parent"
-                android:textSize="60sp"
                 android:gravity="center"
-                android:text="" />
+                android:text=""
+                android:textSize="60sp" />
         </TableRow>
+
         <TableRow
             android:layout_width="362dp"
-            android:gravity="center"
             android:layout_height="120dp"
-            >
+            android:gravity="center">
+
             <View
-                android:layout_height="1dp"
                 android:layout_width="1dp"
+                android:layout_height="1dp"
                 android:background="#FF909090" />
+
             <View
-                android:layout_height="1dp"
                 android:layout_width="1dp"
+                android:layout_height="1dp"
                 android:background="#FF909090" />
+
             <View
-                android:layout_height="1dp"
                 android:layout_width="1dp"
+                android:layout_height="1dp"
                 android:background="#FF909090" />
+
             <View
-                android:layout_height="1dp"
                 android:layout_width="1dp"
+                android:layout_height="1dp"
                 android:background="#FF909090" />
+
             <View
-                android:layout_height="1dp"
                 android:layout_width="1dp"
+                android:layout_height="1dp"
                 android:background="#FF909090" />
         </TableRow>
 
         <TableRow
             android:layout_width="362dp"
-            android:gravity="center"
             android:layout_height="120dp"
-            >
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/cell_10"
                 android:layout_width="120dp"
                 android:layout_height="match_parent"
-                android:textSize="60sp"
                 android:gravity="center"
-                android:text="" />
+                android:text=""
+                android:textSize="60sp" />
 
             <View
-                android:layout_height="120dp"
                 android:layout_width="1dp"
+                android:layout_height="120dp"
                 android:background="#FF909090" />
 
             <TextView
                 android:id="@+id/cell_11"
                 android:layout_width="120dp"
                 android:layout_height="match_parent"
-                android:textSize="60sp"
                 android:gravity="center"
-                android:text="" />
+                android:text=""
+                android:textSize="60sp" />
+
             <View
-                android:layout_height="120dp"
                 android:layout_width="1dp"
+                android:layout_height="120dp"
                 android:background="#FF909090" />
 
             <TextView
                 android:id="@+id/cell_12"
                 android:layout_width="120dp"
                 android:layout_height="match_parent"
-                android:textSize="60sp"
                 android:gravity="center"
-                android:text="" />
+                android:text=""
+                android:textSize="60sp" />
         </TableRow>
 
         <TableRow
             android:layout_width="362dp"
-            android:gravity="center"
             android:layout_height="120dp"
-            >
+            android:gravity="center">
+
             <View
-                android:layout_height="1dp"
                 android:layout_width="1dp"
+                android:layout_height="1dp"
                 android:background="#FF909090" />
+
             <View
-                android:layout_height="1dp"
                 android:layout_width="1dp"
+                android:layout_height="1dp"
                 android:background="#FF909090" />
+
             <View
-                android:layout_height="1dp"
                 android:layout_width="1dp"
+                android:layout_height="1dp"
                 android:background="#FF909090" />
+
             <View
-                android:layout_height="1dp"
                 android:layout_width="1dp"
+                android:layout_height="1dp"
                 android:background="#FF909090" />
+
             <View
-                android:layout_height="1dp"
                 android:layout_width="1dp"
+                android:layout_height="1dp"
                 android:background="#FF909090" />
         </TableRow>
+
         <TableRow
             android:layout_width="362dp"
-            android:gravity="center"
             android:layout_height="120dp"
-            >
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/cell_20"
                 android:layout_width="120dp"
                 android:layout_height="match_parent"
-                android:textSize="60sp"
                 android:gravity="center"
-                android:text="" />
+                android:text=""
+                android:textSize="60sp" />
 
             <View
-                android:layout_height="120dp"
                 android:layout_width="1dp"
+                android:layout_height="120dp"
                 android:background="#FF909090" />
 
             <TextView
                 android:id="@+id/cell_21"
                 android:layout_width="120dp"
                 android:layout_height="match_parent"
-                android:textSize="60sp"
                 android:gravity="center"
-                android:text="" />
+                android:text=""
+                android:textSize="60sp" />
 
             <View
-                android:layout_height="120dp"
                 android:layout_width="1dp"
+                android:layout_height="120dp"
                 android:background="#FF909090" />
 
             <TextView
                 android:id="@+id/cell_22"
                 android:layout_width="120dp"
                 android:layout_height="match_parent"
-                android:textSize="60sp"
                 android:gravity="center"
-                android:text="O" />
+                android:text="O"
+                android:textSize="60sp" />
         </TableRow>
 
     </TableLayout>

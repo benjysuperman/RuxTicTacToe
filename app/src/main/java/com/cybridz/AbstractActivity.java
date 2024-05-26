@@ -6,11 +6,15 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.cybridz.ruxtictactoe.GameActivity;
+import com.cybridz.ruxtictactoe.R;
 import com.cybridz.ruxtictactoe.helpers.AndroidGeneralLayoutHelper;
 import com.cybridz.ruxtictactoe.helpers.NetworkHelper;
 import com.cybridz.ruxtictactoe.helpers.RobotHelper;
@@ -39,6 +43,8 @@ public abstract class AbstractActivity extends AppCompatActivity {
     public static final String LOGGER_KEY = "ruxtictactoe";
     protected static final int REQUEST_CODE = 456728828;
 
+    protected View current_view;
+
     protected Handler serviceLoadedHandler = new Handler();
     protected Runnable serviceLoadedRunner = new Runnable() {
         @Override
@@ -64,6 +70,25 @@ public abstract class AbstractActivity extends AppCompatActivity {
 
     protected void checkNetwork(){
         NetworkHelper.exitIfNetworkUnavailable(getSystemService(ConnectivityManager.class));
+    }
+
+    protected void makeAlert(String message, int seconds){
+        AlertDialog.Builder builder = new AlertDialog.Builder(AbstractActivity.this);
+        builder.setMessage(message);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        current_view.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+            }
+        }, (seconds * 1000L));
+    }
+
+    protected void makeAlert(String message){
+        makeAlert(message, 3);
     }
 
     protected void initializeServicesIfNeeded(){
