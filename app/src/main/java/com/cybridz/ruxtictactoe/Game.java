@@ -48,6 +48,14 @@ public class Game {
                 int resID = r.getIdentifier(cellID, "id", packageName);
                 TextView cell = activity.findViewById(resID);
                 cell.setText("");
+                int iToClick = j;
+                int jToClick = i;
+                cell.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ((GameActivity) activity).updateCell(cell, iToClick, jToClick);
+                    }
+                });
                 cells.put(cellID, cell);
                 grid[i][j] = UNSET;
             }

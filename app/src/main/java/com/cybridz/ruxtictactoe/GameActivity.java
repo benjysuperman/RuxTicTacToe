@@ -18,7 +18,7 @@ public class GameActivity extends AbstractActivity {
     /**
      * Testing purpose
      */
-    private boolean test_mode = true;
+    private boolean test_mode = false;
 
     /**
      * Game Activity elements
@@ -79,24 +79,21 @@ public class GameActivity extends AbstractActivity {
         sharedServices.getBlinkingLightMessageService().setRandomEarColor();
         sharedServices.getBlinkingLightMessageService().start();
 
-        runGame();
+        play();
         checkTestGame(rux_symbol, false);
         checkTestGame(player_symbol, true);
     }
 
-    private void runGame(){
-        game = new Game(getResources(), getPackageName(), this);
-        pickRandomPlayers();
-        if(current_symbol == rux_symbol){
-            player1.setText("Rux");
-            player2.setText("Your");
-        } else {
-            player1.setText("Your");
-            player2.setText("Rux");
+    public void updateCell(TextView cell, int i, int j){
+        if(cell.getText().equals("")){
+            if(current_symbol == rux_symbol){
+                player_plays();
+            } else {
+                rux_plays();
+            }
+            setCurrentPlayerTurnVisibility();
+            checkFinished();
         }
-        setCurrentPlayerTurnVisibility();
-        player1_symbol.setText(current_symbol == Game.X ? "X" : "O");
-        player2_symbol.setText(current_symbol == Game.X ? "O" : "X");
     }
 
     private void setCurrentPlayerTurnVisibility(){
@@ -199,11 +196,11 @@ public class GameActivity extends AbstractActivity {
     }
 
     private void rux_plays(){
-        current_symbol = player_symbol;
+        current_symbol = rux_symbol;
     }
 
     private void player_plays(){
-        current_symbol = rux_symbol;
+        current_symbol = player_symbol;
     }
 
     private String checkFinished() {
@@ -250,6 +247,18 @@ public class GameActivity extends AbstractActivity {
 
     @Override
     public void play() {
-
+        Log.d(LOGGER_KEY, "play");
+        game = new Game(getResources(), getPackageName(), this);
+        pickRandomPlayers();
+        if(current_symbol == rux_symbol){
+            player1.setText("Rux");
+            player2.setText("Your");
+        } else {
+            player1.setText("Your");
+            player2.setText("Rux");
+        }
+        setCurrentPlayerTurnVisibility();
+        player1_symbol.setText(current_symbol == Game.X ? "X" : "O");
+        player2_symbol.setText(current_symbol == Game.X ? "O" : "X");
     }
 }
