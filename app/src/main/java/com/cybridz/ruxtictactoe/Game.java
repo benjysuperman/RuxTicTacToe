@@ -9,14 +9,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.cybridz.AbstractActivity;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 public class Game {
 
     private Map<String, View> cells;
-    private Integer[][] grid;
+    private int[][] grid;
     public static final int UNSET = 0;
     public static final int O = 1;
     public static final int X = 2;
@@ -26,7 +26,7 @@ public class Game {
 
     public Game(Resources r, String packageName, AppCompatActivity activity) {
         cells = new HashMap<>();
-        grid = new Integer[3][3];
+        grid = new int[3][3];
         this.r = r;
         this.packageName = packageName;
         this.activity = activity;
@@ -37,11 +37,11 @@ public class Game {
         return cells;
     }
 
-    public Integer[][] getGrid() {
+    public int[][] getGrid() {
         return grid;
     }
 
-    private void emptyBoard(){
+    public void emptyBoard(){
         for (int i=0; i < grid.length; i++){
             for (int j=0; j < grid[i].length; j++){
                 String cellID = "cell_" + i + j;
@@ -54,34 +54,45 @@ public class Game {
         }
     }
 
-    public Integer[] checkRowForWin(){
-        Integer[] lines = new Integer[3];
-        lines[0] = grid[0][0] == grid[0][1] && grid[0][1] == grid[0][2] ? grid[0][0] : UNSET;
-        lines[1] = grid[1][0] == grid[1][1] && grid[1][1] == grid[1][2] ? grid[1][0] : UNSET;
-        lines[2] = grid[2][0] == grid[2][1] && grid[2][1] == grid[2][2] ? grid[2][0] : UNSET;
-        return lines;
+    public int checkRowForWin(int symbol){
+        int[] lines = new int[3];
+        lines[0] = grid[0][0] == symbol && grid[0][1] == symbol && grid[0][2] == symbol ? symbol : UNSET;
+        lines[1] = grid[1][0] == symbol && grid[1][1] == symbol && grid[1][2] == symbol ? symbol : UNSET;
+        lines[2] = grid[2][0] == symbol && grid[2][1] == symbol && grid[2][2] == symbol ? symbol : UNSET;
+        return IntStream.of(lines).sum() == symbol ? symbol : 0;
     }
 
-    public Integer[] checkColumnForWin(){
-        Integer[] columns = new Integer[3];
-        columns[0] = grid[0][0] == grid[1][0] && grid[1][0] == grid[2][0] ? grid[0][0] : UNSET;
-        columns[1] = grid[0][1] == grid[1][1] && grid[1][1] == grid[2][1] ? grid[0][1] : UNSET;
-        columns[2] = grid[0][2] == grid[1][2] && grid[1][2] == grid[2][2] ? grid[0][2] : UNSET;
-        return columns;
+    public int checkColumnForWin(int symbol){
+        int[] columns = new int[3];
+        columns[0] = grid[0][0] == symbol && grid[1][0] == symbol && grid[2][0] == symbol ? symbol : UNSET;
+        columns[1] = grid[0][1] == symbol && grid[1][1] == symbol && grid[2][1] == symbol ? symbol : UNSET;
+        columns[2] = grid[0][2] == symbol && grid[1][2] == symbol && grid[2][2] == symbol ? symbol : UNSET;
+        return IntStream.of(columns).sum() == symbol ? symbol : 0;
     }
 
-    public Integer checkDiagonalForWin(){
-        return grid[0][0] == grid[1][1] &&  grid[1][1] == grid[2][2] ? grid[0][0] : UNSET;
+    public int checkDiagonalForWin(int symbol){
+        return grid[0][0] == symbol && grid[1][1] == symbol && grid[2][2] == symbol ? symbol : UNSET;
     }
 
-    public Integer checkInverseDiagonalForWin(){
-        return grid[0][2] == grid[1][1] && grid[1][1] == grid[2][0] ? grid[0][2] : UNSET;
+    public int checkInverseDiagonalForWin(int symbol){
+        return grid[0][2] == symbol && grid[1][1] == symbol && grid[2][0] == symbol ? symbol : UNSET;
     }
 
-    public void printWinResults(){
-        Log.d(AbstractActivity.LOGGER_KEY, "Rows : " + Arrays.asList(checkRowForWin()));
-        Log.d(AbstractActivity.LOGGER_KEY, "Columns : " +  Arrays.asList(checkColumnForWin()));
-        Log.d(AbstractActivity.LOGGER_KEY, "Diagonale : " + checkDiagonalForWin());
-        Log.d(AbstractActivity.LOGGER_KEY, "Inverse diagonale : " + checkInverseDiagonalForWin());
+    public boolean gridIsFilled(){
+        for (int i=0; i < grid.length; i++){
+            for (int j=0; j < grid.length; j++){
+                if(grid[i][j] == 0){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public void printResults(int symbol){
+        Log.d(AbstractActivity.LOGGER_KEY, "Rows : " + checkRowForWin(symbol));
+        Log.d(AbstractActivity.LOGGER_KEY, "Columns : " +  checkColumnForWin(symbol));
+        Log.d(AbstractActivity.LOGGER_KEY, "Diagonale : " + checkDiagonalForWin(symbol));
+        Log.d(AbstractActivity.LOGGER_KEY, "Inverse diagonale : " + checkInverseDiagonalForWin(symbol));
     }
 }
