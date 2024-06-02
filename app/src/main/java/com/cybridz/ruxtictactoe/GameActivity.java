@@ -9,7 +9,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.cybridz.AbstractActivity;
+import com.cybridz.ruxtictactoe.components.Cell;
+import com.cybridz.ruxtictactoe.components.GameOver;
+import com.cybridz.ruxtictactoe.helpers.Api;
 import com.cybridz.ruxtictactoe.helpers.TestGameScenario;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.Random;
 
@@ -38,9 +44,8 @@ public class GameActivity extends AbstractActivity {
 
     private static Game game;
 
-    private static int round = 1;
-
     private static int current_symbol;
+    private static String rux_algorithm;
 
     public static int rux_symbol;
 
@@ -48,8 +53,15 @@ public class GameActivity extends AbstractActivity {
 
     private static final String RUX_FINISHED = "RUX";
     private static final String PLAYER_FINISHED = "PLAYER";
-    private static final String GAME_OVER_FINISHED = "GAME OVER";
+    private static final String DRAW_FINISHED = "DRAW";
     private static final String NOBODY_FINISHED = "NONE";
+
+    // Game modes
+    private static final String AI = "AI";
+    private static final String ALGO = "ALGO";
+
+    // API
+    private Api api;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,20 +96,24 @@ public class GameActivity extends AbstractActivity {
         checkTestGame(player_symbol, true);
     }
 
-    public void updateCell(TextView cell, int i, int j){
-        if(cell.getText().equals("")){
-            if(current_symbol == rux_symbol){
-                player_plays();
-            } else {
+    public void updateCell(Cell cell){
+        if(current_symbol == player_symbol){
+            if(cell.getView().getText().equals("")){
+                cell.getView().setText(player_symbol == Game.X ? "X" : "O");
+                String[] ij = cell.getId().split("_");
+                int i = Integer.valueOf(ij[0]);
+                int j = Integer.valueOf(ij[1]);
+                game.getGrid()[i][j] = (player_symbol == Game.X) ? Game.X : Game.O;
+                /*
+                 * 1. Check if there is a winner or if the grid is full
+                 * 2. If false rux plays
+                 */
                 rux_plays();
             }
-            setCurrentPlayerTurnVisibility();
-            checkFinished();
         }
     }
 
     private void setCurrentPlayerTurnVisibility(){
-        if(current_symbol == rux_symbol){
             player1.setTextColor(Color.rgb(29, 161, 242));
             player1.setTypeface(null, Typeface.BOLD);
             player1_symbol.setTextColor(Color.rgb(29, 161, 242));
@@ -109,22 +125,6 @@ public class GameActivity extends AbstractActivity {
             player2_symbol.setTextColor(Color.rgb(101, 119, 134));
             player2_symbol.setTypeface(null, Typeface.NORMAL);
             player2_symbol.setTextSize(18);
-
-        } else {
-
-            player2.setTextColor(Color.rgb(29, 161, 242));
-            player2.setTypeface(null, Typeface.BOLD);
-            player2_symbol.setTextColor(Color.rgb(29, 161, 242));
-            player2_symbol.setTypeface(null, Typeface.BOLD);
-            player2_symbol.setTextSize(26);
-
-            player1.setTextColor(Color.rgb(101, 119, 134));
-            player1.setTypeface(null, Typeface.NORMAL);
-            player1_symbol.setTextColor(Color.rgb(101, 119, 134));
-            player1_symbol.setTypeface(null, Typeface.NORMAL);
-            player1_symbol.setTextSize(18);
-
-        }
     }
 
     private void checkTestGame(int symbol, boolean do_full){
@@ -196,11 +196,56 @@ public class GameActivity extends AbstractActivity {
     }
 
     private void rux_plays(){
-        current_symbol = rux_symbol;
-    }
+        /*
+         * 1. Send the grid lastly updated to the assistant
+         * 2. Add face Rux thinking
+         * 2. Get his move
+         * 3. Check if there is a winner
+         */
+        if( rux_algorithm.equals(AI) ){
 
-    private void player_plays(){
-        current_symbol = player_symbol;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        GameOver gameOver;
+                        try {
+                            String requestBody = "{\"model\": \"gpt-4o\", \"messages\": [{\"role\": \"system\", \"content\": \"" + getProperty(API, "SYSTEM_PROMPT") + "\"},{\"role\": \"user\", \"content\": \"" + game.getGridForRequest() + "\", \"symbol\": " + rux_symbol + "}]}";
+                            String response = api.sendRequest(requestBody);
+                            JSONObject jsonObject = new JSONObject(response);
+                            JSONArray choices = jsonObject.getJSONArray("choices");
+                            JSONObject firstChoice = choices.getJSONObject(0);
+                            JSONObject message = firstChoice.getJSONObject("message");
+                            JSONObject content = new JSONObject(message.getString("content").replace("```json","").replace("```", ""));
+                            String[] coordinates = content.getString("coordinates").split(",");
+                            game.getCells().get("cell_" + coordinates[0] + coordinates[1]).getView().setText(rux_symbol == Game.X ? "X" : "O");
+                            game.getGrid()[Integer.parseInt(coordinates[0])][Integer.parseInt(coordinates[1])] = rux_symbol;
+                            switch (checkFinished()){
+                                case NOBODY_FINISHED:
+                                    sharedServices.getRobotService().robotPlayTTs(content.getString("message"));
+                                    current_symbol = player_symbol;
+                                    setCurrentPlayerTurnVisibility();
+                                    break;
+                                case RUX_FINISHED:
+                                    gameOver = new GameOver(RUX_FINISHED,content.getString("message"), "r_robot_won");
+                                    goToEndActivity(gameOver);
+                                    break;
+                                case PLAYER_FINISHED:
+                                    gameOver = new GameOver(PLAYER_FINISHED,content.getString("message"), "r_player_won");
+                                    goToEndActivity(gameOver);
+                                    break;
+                                case DRAW_FINISHED:
+                                    gameOver = new GameOver(DRAW_FINISHED,content.getString("message"), "r_noone_won");
+                                    goToEndActivity(gameOver);
+                                    break;
+                            }
+                        } catch (Exception e){
+                            Log.e(LOGGER_KEY, e.getMessage());
+                        }
+                    }
+                }).start();
+        } else {
+
+        }
     }
 
     private String checkFinished() {
@@ -225,7 +270,7 @@ public class GameActivity extends AbstractActivity {
 
         if (game.gridIsFilled()){
             Log.d(LOGGER_KEY, "No one wins");
-            return GAME_OVER_FINISHED;
+            return DRAW_FINISHED;
         }
         Log.d(LOGGER_KEY, "Game not finished");
         return NOBODY_FINISHED;
@@ -241,24 +286,48 @@ public class GameActivity extends AbstractActivity {
         Log.d(LOGGER_KEY, "Player plays with " + (rux_symbol == 1 ? "X" : "O") + ", number: " + player_symbol);
     }
 
+    public void goToEndActivity(GameOver gameOver) {
+        Intent intent = new Intent(GameActivity.this, EndActivity.class);
+        intent.putExtra("gameOver", gameOver);
+        startActivity(intent);
+    }
+
     public void goToStartActivity() {
-        startActivity(new Intent(GameActivity.this, StartActivity.class));
+        Intent intent = new Intent(GameActivity.this, StartActivity.class);
+        startActivity(intent);
     }
 
     @Override
     public void play() {
         Log.d(LOGGER_KEY, "play");
+        rux_algorithm = AI;
         game = new Game(getResources(), getPackageName(), this);
+        if( rux_algorithm.equals(AI) ){
+            api = new Api(this);
+            api.loadClient();
+        }
         pickRandomPlayers();
-        if(current_symbol == rux_symbol){
+        setCurrentPlayerTurnVisibility();
+        // Cheat
+        current_symbol = rux_symbol;
+        if (current_symbol == rux_symbol){
             player1.setText("Rux");
             player2.setText("Your");
+            rux_plays();
         } else {
             player1.setText("Your");
             player2.setText("Rux");
         }
-        setCurrentPlayerTurnVisibility();
+
         player1_symbol.setText(current_symbol == Game.X ? "X" : "O");
         player2_symbol.setText(current_symbol == Game.X ? "O" : "X");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if( rux_algorithm.equals(AI) && api.isClientLoaded() ){
+            api.closeClient();
+        }
     }
 }

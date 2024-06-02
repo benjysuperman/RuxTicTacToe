@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.cybridz.AbstractActivity;
+import com.cybridz.ruxtictactoe.components.Cell;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.util.stream.IntStream;
 
 public class Game {
 
-    private Map<String, View> cells;
+    private Map<String, Cell> cells;
     private int[][] grid;
     public static final int UNSET = 0;
     public static final int O = 1;
@@ -33,8 +34,20 @@ public class Game {
         emptyBoard();
     }
 
-    public Map<String, View> getCells() {
+    public Map<String, Cell> getCells() {
         return cells;
+    }
+
+    public Map<String, Cell> getEmptySpots(){
+        Map<String, Cell> spots = new HashMap<>();
+        for (int i=0; i < grid.length; i++){
+            for (int j=0; j < grid[i].length; j++){
+                if(grid[i][j] == UNSET){
+                    spots.put("cell_" + i + j, cells.get("cell_" + i + j));
+                }
+            }
+        }
+        return spots;
     }
 
     public int[][] getGrid() {
@@ -46,14 +59,12 @@ public class Game {
             for (int j=0; j < grid[i].length; j++){
                 String cellID = "cell_" + i + j;
                 int resID = r.getIdentifier(cellID, "id", packageName);
-                TextView cell = activity.findViewById(resID);
-                cell.setText("");
-                int iToClick = j;
-                int jToClick = i;
-                cell.setOnClickListener(new View.OnClickListener() {
+                Cell cell = new Cell(i + "_" + j, activity.findViewById(resID));
+                cell.getView().setText("");
+                cell.getView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ((GameActivity) activity).updateCell(cell, iToClick, jToClick);
+                        ((GameActivity) activity).updateCell(cell);
                     }
                 });
                 cells.put(cellID, cell);
@@ -102,5 +113,23 @@ public class Game {
         Log.d(AbstractActivity.LOGGER_KEY, "Columns : " +  checkColumnForWin(symbol));
         Log.d(AbstractActivity.LOGGER_KEY, "Diagonale : " + checkDiagonalForWin(symbol));
         Log.d(AbstractActivity.LOGGER_KEY, "Inverse diagonale : " + checkInverseDiagonalForWin(symbol));
+    }
+
+    public String getGridForRequest(){
+        StringBuilder sb = new StringBuilder();
+        for (int i=0; i < grid.length; i++){
+            if(i == 0){
+                sb.append("|");
+            }
+            for (int j=0; j < grid.length; j++){
+                if(grid[i][j] == 0){
+                    sb.append(" ");
+                } else {
+                    sb.append(grid[i][j]);
+                }
+                sb.append("|");
+            }
+        }
+        return sb.toString();
     }
 }

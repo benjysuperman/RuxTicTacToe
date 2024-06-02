@@ -13,8 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.cybridz.ruxtictactoe.GameActivity;
-import com.cybridz.ruxtictactoe.R;
 import com.cybridz.ruxtictactoe.helpers.AndroidGeneralLayoutHelper;
 import com.cybridz.ruxtictactoe.helpers.NetworkHelper;
 import com.cybridz.ruxtictactoe.helpers.RobotHelper;
@@ -23,7 +21,9 @@ import com.cybridz.ruxtictactoe.services.effects.BlinkingLightMessageService;
 import com.cybridz.ruxtictactoe.services.motors.MotorRotationMessageService;
 import com.leitianpai.robotsdk.RobotService;
 
+import java.io.IOException;
 import java.util.Map;
+import java.util.Properties;
 
 public abstract class AbstractActivity extends AppCompatActivity {
 
@@ -38,10 +38,25 @@ public abstract class AbstractActivity extends AppCompatActivity {
             Manifest.permission.CAMERA
     };
 
+    public static final int API = 0;
+    public static final int SECRET = 1;
+
     private static boolean permissions_check = false;
 
     public static final String LOGGER_KEY = "ruxtictactoe";
     protected static final int REQUEST_CODE = 456728828;
+
+    private static final Properties api_properties = (new Properties());
+    private static final  Properties secret_properties = (new Properties());
+
+    static {
+        try {
+            api_properties.load(AbstractActivity.class.getClassLoader().getResourceAsStream("properties/api.properties"));
+            secret_properties.load(AbstractActivity.class.getClassLoader().getResourceAsStream("properties/secret_key.properties"));
+        } catch (IOException e) {
+            Log.d(LOGGER_KEY, e.getMessage());
+        }
+    }
 
     protected View current_view;
 
@@ -65,6 +80,14 @@ public abstract class AbstractActivity extends AppCompatActivity {
     protected Map<String, Drawable> drawableMap;
     protected boolean launched = false;
     protected SharedServices sharedServices;
+
+    public String getProperty(int set, String key) {
+        if (set == API)
+            return api_properties.getProperty(key);
+        if (set == SECRET)
+            return secret_properties.getProperty(key);
+        return null;
+    }
 
     public abstract void play();
 

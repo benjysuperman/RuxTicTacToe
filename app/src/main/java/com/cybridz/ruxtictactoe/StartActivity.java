@@ -17,6 +17,7 @@ public class StartActivity extends AbstractActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(LOGGER_KEY, getProperty(API, "SYSTEM_PROMPT"));
         setContentView(R.layout.start_activity);
         current_view = findViewById(R.id.start_activity);
         initializeServicesIfNeeded();

@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import com.cybridz.ruxtictactoe.Game;
 import com.cybridz.ruxtictactoe.GameActivity;
+import com.cybridz.ruxtictactoe.components.Cell;
 
 import java.util.Map;
 
@@ -25,28 +26,28 @@ public class TestGameScenario {
     }
 
     public void boardRowWin(int symbol){
-        Map<String, View> cells = game.getCells();
+        Map<String, Cell> cells = game.getCells();
         int[][] grid = game.getGrid();
-        ((TextView) cells.get("cell_10")).setText(getSymbolStr(symbol));
-        ((TextView) cells.get("cell_11")).setText(getSymbolStr(symbol));
-        ((TextView) cells.get("cell_12")).setText(getSymbolStr(symbol));
+        cells.get("cell_10").getView().setText(getSymbolStr(symbol));
+        cells.get("cell_11").getView().setText(getSymbolStr(symbol));
+        cells.get("cell_12").getView().setText(getSymbolStr(symbol));
         grid[1][0] = getSymbolInt(symbol);
         grid[1][1] = getSymbolInt(symbol);
         grid[1][2] = getSymbolInt(symbol);
     }
 
     public void boardFullGrid(){
-        Map<String, View> cells = game.getCells();
+        Map<String, Cell> cells = game.getCells();
         int[][] grid = game.getGrid();
-        ((TextView) cells.get("cell_00")).setText("X");
-        ((TextView) cells.get("cell_01")).setText("X");
-        ((TextView) cells.get("cell_02")).setText("O");
-        ((TextView) cells.get("cell_10")).setText("O");
-        ((TextView) cells.get("cell_11")).setText("O");
-        ((TextView) cells.get("cell_12")).setText("X");
-        ((TextView) cells.get("cell_20")).setText("X");
-        ((TextView) cells.get("cell_21")).setText("O");
-        ((TextView) cells.get("cell_22")).setText("X");
+        cells.get("cell_00").getView().setText("X");
+        cells.get("cell_01").getView().setText("X");
+        cells.get("cell_02").getView().setText("O");
+        cells.get("cell_10").getView().setText("O");
+        cells.get("cell_11").getView().setText("O");
+        cells.get("cell_12").getView().setText("X");
+        cells.get("cell_20").getView().setText("X");
+        cells.get("cell_21").getView().setText("O");
+        cells.get("cell_22").getView().setText("X");
         grid[0][0] = Game.X;
         grid[0][1] = Game.X;
         grid[0][2] = Game.O;
@@ -59,44 +60,44 @@ public class TestGameScenario {
     }
 
     public void boardColumnsWin(int symbol){
-        Map<String, View> cells = game.getCells();
+        Map<String, Cell> cells = game.getCells();
         int[][] grid = game.getGrid();
-        ((TextView) cells.get("cell_01")).setText(getSymbolStr(symbol));
-        ((TextView) cells.get("cell_11")).setText(getSymbolStr(symbol));
-        ((TextView) cells.get("cell_21")).setText(getSymbolStr(symbol));
+        cells.get("cell_01").getView().setText(getSymbolStr(symbol));
+        cells.get("cell_11").getView().setText(getSymbolStr(symbol));
+        cells.get("cell_21").getView().setText(getSymbolStr(symbol));
         grid[0][1] = getSymbolInt(symbol);
         grid[1][1] = getSymbolInt(symbol);
         grid[2][1] = getSymbolInt(symbol);
     }
 
     public void boardPending(){
-        Map<String, View> cells = game.getCells();
+        Map<String, Cell> cells = game.getCells();
         int[][] grid = game.getGrid();
-        ((TextView) cells.get("cell_01")).setText("X");
-        ((TextView) cells.get("cell_11")).setText("O");
-        ((TextView) cells.get("cell_21")).setText("X");
+        cells.get("cell_01").getView().setText("X");
+        cells.get("cell_11").getView().setText("O");
+        cells.get("cell_21").getView().setText("X");
         grid[0][1] = Game.X;
         grid[1][1] = Game.O;
         grid[2][1] = Game.X;
     }
 
     public void boardDiagonalWin(int symbol){
-        Map<String, View> cells = game.getCells();
+        Map<String, Cell> cells = game.getCells();
         int[][] grid = game.getGrid();
-        ((TextView) cells.get("cell_00")).setText(getSymbolStr(symbol));
-        ((TextView) cells.get("cell_11")).setText(getSymbolStr(symbol));
-        ((TextView) cells.get("cell_22")).setText(getSymbolStr(symbol));
+        cells.get("cell_00").getView().setText(getSymbolStr(symbol));
+        cells.get("cell_11").getView().setText(getSymbolStr(symbol));
+        cells.get("cell_22").getView().setText(getSymbolStr(symbol));
         grid[0][0] = getSymbolInt(symbol);
         grid[1][1] = getSymbolInt(symbol);
         grid[2][2] = getSymbolInt(symbol);
     }
 
     public void boardInverseDiagonalWin(int symbol){
-        Map<String, View> cells = game.getCells();
+        Map<String, Cell> cells = game.getCells();
         int[][] grid = game.getGrid();
-        ((TextView) cells.get("cell_02")).setText(getSymbolStr(symbol));
-        ((TextView) cells.get("cell_11")).setText(getSymbolStr(symbol));
-        ((TextView) cells.get("cell_20")).setText(getSymbolStr(symbol));
+        cells.get("cell_02").getView().setText(getSymbolStr(symbol));
+        cells.get("cell_11").getView().setText(getSymbolStr(symbol));
+        cells.get("cell_20").getView().setText(getSymbolStr(symbol));
         grid[0][2] = getSymbolInt(symbol);
         grid[1][1] = getSymbolInt(symbol);
         grid[2][0] = getSymbolInt(symbol);
