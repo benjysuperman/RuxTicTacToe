@@ -1,5 +1,6 @@
 package com.cybridz.ruxtictactoe;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,18 +13,21 @@ import androidx.appcompat.content.res.AppCompatResources;
 import com.cybridz.AbstractActivity;
 import com.cybridz.ruxtictactoe.components.GameOver;
 
+import java.util.Objects;
+
 public class EndActivity extends AbstractActivity {
 
     /**
      * Start Activity elements
      */
-
+    @SuppressWarnings("FieldCanBeLocal")
     private Button restart_button;
-
+    @SuppressWarnings("FieldCanBeLocal")
     private TextView message;
-
+    @SuppressWarnings("FieldCanBeLocal")
     private ImageView image;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,11 +37,12 @@ public class EndActivity extends AbstractActivity {
         initializeServicesIfNeeded();
 
         image = findViewById(R.id.gameover);
-        updateImageView(image, gameOver.getImage());
+        updateImageView(image, Objects.requireNonNull(gameOver).getImage());
 
         message = findViewById(R.id.message);
         sharedServices.getRobotService().robotPlayTTs(gameOver.getMessage());
-        message.setText(gameOver.getWinner() + "\n" + gameOver.getMessage());
+        String messageText = gameOver.getWinner() + "\n" + gameOver.getMessage();
+        message.setText(messageText);
 
         restart_button = findViewById(R.id.restart_game);
         restart_button.setText("Restart");

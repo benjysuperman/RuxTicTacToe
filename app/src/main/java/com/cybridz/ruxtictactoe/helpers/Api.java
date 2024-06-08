@@ -5,6 +5,7 @@ import android.util.Log;
 import com.cybridz.AbstractActivity;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -54,10 +55,9 @@ public class Api {
                 throw new IOException("Unexpected code " + response);
             }
         } catch (IOException e) {
-            e.printStackTrace();
             Log.d(AbstractActivity.LOGGER_KEY, "Response execute error : " + e.getMessage());
         }
-        return response != null ? response.body().string() : null;
+        return response != null ? Objects.requireNonNull(response.body()).string() : null;
     }
 
 }

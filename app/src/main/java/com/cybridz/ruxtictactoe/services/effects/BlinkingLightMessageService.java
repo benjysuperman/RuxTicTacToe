@@ -1,9 +1,8 @@
 package com.cybridz.ruxtictactoe.services.effects;
 
 import android.os.Handler;
-import android.util.Log;
+import android.os.Looper;
 
-import com.cybridz.AbstractActivity;
 import com.cybridz.ruxtictactoe.enums.Light;
 import com.leitianpai.robotsdk.RobotService;
 import com.leitianpai.robotsdk.message.AntennaLightMessage;
@@ -32,6 +31,7 @@ public class BlinkingLightMessageService {
                 .setCurrentEarsColor(Light.getRandomLight());
     }
 
+    @SuppressWarnings("unused")
     public BlinkingLightMessageService(RobotService robotService, int fromInterval, int toInterval) {
         this.robotService = robotService;
         this.isOff = false;
@@ -40,6 +40,7 @@ public class BlinkingLightMessageService {
                 .setCurrentEarsColor(Light.getRandomLight());
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public BlinkingLightMessageService setCurrentEarsColor(int currentEarsColor) {
         this.currentEarsColor = currentEarsColor;
         return this;
@@ -71,7 +72,7 @@ public class BlinkingLightMessageService {
 
     public void start() {
         stop();
-        blinkHandler = new Handler();
+        blinkHandler = new Handler(Looper.getMainLooper());
         blinkRunnable = new Runnable() {
             @Override
             public void run() {

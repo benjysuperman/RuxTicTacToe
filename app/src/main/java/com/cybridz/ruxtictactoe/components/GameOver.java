@@ -3,11 +3,11 @@ package com.cybridz.ruxtictactoe.components;
 import java.io.Serializable;
 
 public class GameOver implements Serializable {
-    private String message;
+    private final String message;
 
-    private String image;
+    private final String image;
 
-    private String winner;
+    private final String winner;
 
     public GameOver(String winner, String message, String image) {
         this.message = message;

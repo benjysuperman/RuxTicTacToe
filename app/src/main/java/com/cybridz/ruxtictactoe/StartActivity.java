@@ -11,7 +11,7 @@ public class StartActivity extends AbstractActivity {
     /**
      * Start Activity elements
      */
-
+    @SuppressWarnings("FieldCanBeLocal")
     private Button start_button;
 
     @Override

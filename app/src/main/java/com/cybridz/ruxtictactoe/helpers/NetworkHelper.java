@@ -5,7 +5,6 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.cybridz.AbstractActivity;
-import com.cybridz.ruxtictactoe.StartActivity;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;

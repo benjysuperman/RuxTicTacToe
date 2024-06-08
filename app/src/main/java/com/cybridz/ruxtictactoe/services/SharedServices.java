@@ -6,8 +6,10 @@ import com.leitianpai.robotsdk.RobotService;
 
 public class SharedServices {
 
+    @SuppressWarnings("unused")
     private static SharedServices instance;
     private RobotService robotService;
+    @SuppressWarnings("all")
     private boolean openedServices = false;
     private BlinkingLightMessageService blinkingLightMessageService;
     private MotorRotationMessageService motorRotationMessageService;
@@ -44,6 +46,7 @@ public class SharedServices {
         robotService.unbindService();
     }
 
+    @SuppressWarnings("unused")
     public void resetStateServices(){
         if(robotService == null){
             return;
@@ -55,6 +58,7 @@ public class SharedServices {
         robotService.robotOpenSensor();
     }
 
+    @SuppressWarnings("unused")
     public static SharedServices getInstance(){
         return instance;
     }

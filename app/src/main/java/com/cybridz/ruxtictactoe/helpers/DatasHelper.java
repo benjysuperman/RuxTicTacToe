@@ -1,6 +1,9 @@
 package com.cybridz.ruxtictactoe.helpers;
 
+import static com.cybridz.AbstractActivity.LOGGER_KEY;
+
 import android.content.res.AssetManager;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,10 +13,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class DatasHelper {
 
-    private static Map<String, Map<String, StringBuilder>> loadedDatas = new HashMap<>();
+    private final static Map<String, Map<String, StringBuilder>> loadedDatas = new HashMap<>();
 
+    @SuppressWarnings("unused")
     public static String getKeyPairValueFromAssetsFile(String fileName, AssetManager assetManager, String key) {
         if (loadedDatas.containsKey(fileName)) {
             if (Objects.requireNonNull(loadedDatas.get(fileName)).containsKey(key)) {
@@ -37,7 +42,7 @@ public class DatasHelper {
             }
             reader.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(LOGGER_KEY, "Error while reading file " + fileName, e);
         }
         return Objects.requireNonNull(Objects.requireNonNull(loadedDatas.get(fileName)).get(key)).toString();
     }

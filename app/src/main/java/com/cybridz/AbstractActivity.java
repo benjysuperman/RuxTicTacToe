@@ -2,9 +2,9 @@ package com.cybridz;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 
@@ -22,11 +22,12 @@ import com.cybridz.ruxtictactoe.services.motors.MotorRotationMessageService;
 import com.leitianpai.robotsdk.RobotService;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 public abstract class AbstractActivity extends AppCompatActivity {
 
+    protected static final boolean TEST_MODE = false;
     protected static final String[] PERMISSIONS = new String[]{
             Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.INTERNET,
@@ -51,16 +52,16 @@ public abstract class AbstractActivity extends AppCompatActivity {
 
     static {
         try {
-            api_properties.load(AbstractActivity.class.getClassLoader().getResourceAsStream("properties/api.properties"));
-            secret_properties.load(AbstractActivity.class.getClassLoader().getResourceAsStream("properties/secret_key.properties"));
+            api_properties.load(Objects.requireNonNull(AbstractActivity.class.getClassLoader()).getResourceAsStream("properties/api.properties"));
+            secret_properties.load(Objects.requireNonNull(AbstractActivity.class.getClassLoader()).getResourceAsStream("properties/secret_key.properties"));
         } catch (IOException e) {
-            Log.d(LOGGER_KEY, e.getMessage());
+            Log.d(LOGGER_KEY, Objects.requireNonNull(e.getMessage()));
         }
     }
 
     protected View current_view;
 
-    protected Handler serviceLoadedHandler = new Handler();
+    protected Handler serviceLoadedHandler = new Handler(Looper.getMainLooper());
     protected Runnable serviceLoadedRunner = new Runnable() {
         @Override
         public void run() {
@@ -76,9 +77,6 @@ public abstract class AbstractActivity extends AppCompatActivity {
     /**
      * FLOW STATES
      **/
-
-    protected Map<String, Drawable> drawableMap;
-    protected boolean launched = false;
     protected SharedServices sharedServices;
 
     public String getProperty(int set, String key) {
@@ -95,21 +93,20 @@ public abstract class AbstractActivity extends AppCompatActivity {
         NetworkHelper.exitIfNetworkUnavailable(getSystemService(ConnectivityManager.class));
     }
 
+    @SuppressWarnings("all")
     protected void makeAlert(String message, int seconds){
         AlertDialog.Builder builder = new AlertDialog.Builder(AbstractActivity.this);
         builder.setMessage(message);
         AlertDialog dialog = builder.create();
         dialog.show();
-        current_view.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
-                }
+        current_view.postDelayed(() -> {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
             }
         }, (seconds * 1000L));
     }
 
+    @SuppressWarnings("unused")
     protected void makeAlert(String message){
         makeAlert(message, 3);
     }
@@ -118,7 +115,7 @@ public abstract class AbstractActivity extends AppCompatActivity {
         checkNetwork();
         checkPermissions();
         openServices();
-        AndroidGeneralLayoutHelper.hideBar(getWindow().getDecorView());
+        AndroidGeneralLayoutHelper.hideBar(this);
     }
 
     protected void checkPermissions(){
@@ -140,6 +137,10 @@ public abstract class AbstractActivity extends AppCompatActivity {
             RobotService robotService = RobotService.getInstance(this);
             sharedServices = new SharedServices(robotService, new BlinkingLightMessageService(robotService), new MotorRotationMessageService(robotService));
         }
+    }
+
+    public static boolean isTestMode() {
+        return TEST_MODE;
     }
 
     @Override

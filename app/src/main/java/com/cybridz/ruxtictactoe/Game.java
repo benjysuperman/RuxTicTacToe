@@ -1,5 +1,7 @@
 package com.cybridz.ruxtictactoe;
 
+import static com.cybridz.AbstractActivity.LOGGER_KEY;
+
 import android.content.res.Resources;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.cybridz.AbstractActivity;
 import com.cybridz.ruxtictactoe.components.Cell;
+import com.cybridz.ruxtictactoe.enums.GameStatus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -109,10 +112,27 @@ public class Game {
     }
 
     public void printResults(int symbol){
-        Log.d(AbstractActivity.LOGGER_KEY, "Rows : " + checkRowForWin(symbol));
-        Log.d(AbstractActivity.LOGGER_KEY, "Columns : " +  checkColumnForWin(symbol));
-        Log.d(AbstractActivity.LOGGER_KEY, "Diagonale : " + checkDiagonalForWin(symbol));
-        Log.d(AbstractActivity.LOGGER_KEY, "Inverse diagonale : " + checkInverseDiagonalForWin(symbol));
+        Log.d(LOGGER_KEY, "Rows : " + checkRowForWin(symbol));
+        Log.d(LOGGER_KEY, "Columns : " +  checkColumnForWin(symbol));
+        Log.d(LOGGER_KEY, "Diagonale : " + checkDiagonalForWin(symbol));
+        Log.d(LOGGER_KEY, "Inverse diagonale : " + checkInverseDiagonalForWin(symbol));
+    }
+
+    public String checkFinished(int rux, int player) {
+        if(checkColumnForWin(rux) == rux || checkRowForWin(rux) == rux || checkDiagonalForWin(rux) == rux || checkInverseDiagonalForWin(rux) == rux){
+            Log.d(LOGGER_KEY, "Rux win");
+            return GameStatus.RUX_FINISHED.toString();
+        }
+        if(checkColumnForWin(player) == player || checkRowForWin(player) == player || checkDiagonalForWin(player) == player || checkInverseDiagonalForWin(player) == player){
+            Log.d(LOGGER_KEY, "Player win");
+            return GameStatus.PLAYER_FINISHED.toString();
+        }
+        if (gridIsFilled()){
+            Log.d(LOGGER_KEY, "No one wins");
+            return GameStatus.DRAW_FINISHED.toString();
+        }
+        Log.d(LOGGER_KEY, "Game not finished");
+        return GameStatus.NOBODY_FINISHED.toString();
     }
 
     public String getGridForRequest(){
@@ -123,5 +143,10 @@ public class Game {
             }
         }
         return sb.toString();
+    }
+
+    public void updateGrid(Cell cell, int symbol) {
+        String[] ij = cell.getId().split("_");
+        grid[Integer.parseInt(ij[0])][Integer.parseInt(ij[1])] = symbol;
     }
 }
