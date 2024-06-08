@@ -12,6 +12,7 @@ public class GameOver implements Serializable {
     public GameOver(String winner, String message, String image) {
         this.message = message;
         this.image = image;
+        this.winner = winner;
     }
 
     public String getImage() {

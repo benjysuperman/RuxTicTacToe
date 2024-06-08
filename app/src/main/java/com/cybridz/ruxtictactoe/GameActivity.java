@@ -18,6 +18,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.Random;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class GameActivity extends AbstractActivity {
 
@@ -59,6 +64,8 @@ public class GameActivity extends AbstractActivity {
     // Game modes
     private static final String AI = "AI";
     private static final String ALGO = "ALGO";
+
+    private String winner;
 
     // API
     private Api api;
@@ -209,32 +216,38 @@ public class GameActivity extends AbstractActivity {
                     public void run() {
                         GameOver gameOver;
                         try {
-                            String requestBody = "{\"model\": \"gpt-4o\", \"messages\": [{\"role\": \"system\", \"content\": \"" + getProperty(API, "SYSTEM_PROMPT") + "\"},{\"role\": \"user\", \"content\": \"" + game.getGridForRequest() + "\", \"symbol\": " + rux_symbol + "}]}";
+                            String system_prompt = getProperty(API, "SYSTEM_PROMPT").replace("\"", "\\\"");
+                            String grid = game.getGridForRequest();
+                            Log.d(LOGGER_KEY, "Grid : " + grid);
+                            String model = "gpt-4o";
+                            String requestBody = "{\"model\": \"" + model + "\", \"messages\": [{\"role\": \"system\", \"content\": \"" + system_prompt + "\"},{\"role\": \"user\", \"content\": \"grid:" + grid + "\", \"your_symbol\":" + rux_symbol + ", \"your_symbol\":" + player_symbol + "}]}";
                             String response = api.sendRequest(requestBody);
                             JSONObject jsonObject = new JSONObject(response);
                             JSONArray choices = jsonObject.getJSONArray("choices");
                             JSONObject firstChoice = choices.getJSONObject(0);
                             JSONObject message = firstChoice.getJSONObject("message");
                             JSONObject content = new JSONObject(message.getString("content").replace("```json","").replace("```", ""));
-                            String[] coordinates = content.getString("coordinates").split(",");
+                            String[] coordinates = content.getString("coordinates").split(";");
                             game.getCells().get("cell_" + coordinates[0] + coordinates[1]).getView().setText(rux_symbol == Game.X ? "X" : "O");
                             game.getGrid()[Integer.parseInt(coordinates[0])][Integer.parseInt(coordinates[1])] = rux_symbol;
-                            switch (checkFinished()){
+                            winner = checkFinished();
+                            String winnerMessage = makeMessage();
+                            switch (winner){
                                 case NOBODY_FINISHED:
-                                    sharedServices.getRobotService().robotPlayTTs(content.getString("message"));
+                                    sharedServices.getRobotService().robotPlayTTs(winnerMessage);
                                     current_symbol = player_symbol;
                                     setCurrentPlayerTurnVisibility();
                                     break;
                                 case RUX_FINISHED:
-                                    gameOver = new GameOver(RUX_FINISHED,content.getString("message"), "r_robot_won");
+                                    gameOver = new GameOver(RUX_FINISHED,winnerMessage, "r_robot_won");
                                     goToEndActivity(gameOver);
                                     break;
                                 case PLAYER_FINISHED:
-                                    gameOver = new GameOver(PLAYER_FINISHED,content.getString("message"), "r_player_won");
+                                    gameOver = new GameOver(PLAYER_FINISHED,winnerMessage, "r_player_won");
                                     goToEndActivity(gameOver);
                                     break;
                                 case DRAW_FINISHED:
-                                    gameOver = new GameOver(DRAW_FINISHED,content.getString("message"), "r_noone_won");
+                                    gameOver = new GameOver(DRAW_FINISHED,winnerMessage, "r_noone_won");
                                     goToEndActivity(gameOver);
                                     break;
                             }
@@ -246,6 +259,51 @@ public class GameActivity extends AbstractActivity {
         } else {
 
         }
+    }
+
+    private String makeMessage(){
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Callable<String> callable = () -> {
+            try {
+                String system_prompt = "You make a message for a game of maximum 100 characters";
+                String user_prompt = "Please make a message of maximum 100 characters to signify :";
+                switch (winner){
+                    case RUX_FINISHED:
+                        user_prompt += "Rux won Tic Tac Toe, means you won the game.";
+                        break;
+                    case PLAYER_FINISHED:
+                        user_prompt += "Player won Tic Tac Toe, means your opponent won the game.";
+                        break;
+                    case DRAW_FINISHED:
+                        user_prompt += "Draw none won Tic Tac Toe, means neither your opponent neither you won the game.";
+                        break;
+                    case NOBODY_FINISHED:
+                        user_prompt += "The game is still in progress and it's your turn to play.";
+                        break;
+                }
+                String model = "gpt-4o";
+                String requestBody = "{\"model\": \"" + model + "\", \"messages\": [{\"role\": \"system\", \"content\": \"" + system_prompt + "\"},{\"role\": \"user\", \"content\": \"" + user_prompt + "\"}]}";
+                String response = api.sendRequest(requestBody);
+                JSONObject jsonObject = new JSONObject(response);
+                JSONArray choices = jsonObject.getJSONArray("choices");
+                JSONObject firstChoice = choices.getJSONObject(0);
+                return firstChoice.getJSONObject("message").getString("content");
+            } catch (Exception e){
+                Log.e(LOGGER_KEY, e.getMessage());
+                return "";
+            }
+        };
+
+        Future<String> future = executor.submit(callable);
+        try {
+            return future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            Log.e(LOGGER_KEY, e.getMessage());
+        } finally {
+            executor.shutdown();
+        }
+
+        return "";
     }
 
     private String checkFinished() {

@@ -118,16 +118,8 @@ public class Game {
     public String getGridForRequest(){
         StringBuilder sb = new StringBuilder();
         for (int i=0; i < grid.length; i++){
-            if(i == 0){
-                sb.append("|");
-            }
             for (int j=0; j < grid.length; j++){
-                if(grid[i][j] == 0){
-                    sb.append(" ");
-                } else {
-                    sb.append(grid[i][j]);
-                }
-                sb.append("|");
+                sb.append(grid[i][j]);
             }
         }
         return sb.toString();

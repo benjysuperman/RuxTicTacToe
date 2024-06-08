@@ -27,19 +27,19 @@
 
     <TextView
         android:id="@+id/message"
-        android:layout_width="wrap_content"
+        android:layout_width="500dp"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
         android:text="TextView"
         android:textAlignment="center"
-        android:textColor="@color/material_dynamic_neutral20"
+        android:textColor="#4B504B"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/restart_game"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintVertical_bias="0.881" />
 
     <ImageView
         android:id="@+id/gameover"
@@ -51,7 +51,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.6"
+        app:layout_constraintVertical_bias="0.841"
         app:srcCompat="@drawable/r_player_won" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
