@@ -35,11 +35,12 @@ public class NetworkHelper {
 
     }
 
-    public static void exitIfNetworkUnavailable(ConnectivityManager connectivityManager) {
+    public static boolean exitIfNetworkUnavailable(ConnectivityManager connectivityManager) {
         if (!isNetworkAvailable(connectivityManager)) {
             Log.d(AbstractActivity.LOGGER_KEY, "No network");
-            System.exit(0);
+            return false;
         }
+        return true;
     }
 
     public static String getIPAddress() {

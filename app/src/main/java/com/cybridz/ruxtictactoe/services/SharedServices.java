@@ -19,7 +19,6 @@ public class SharedServices {
             this.robotService = robotService;
             this.blinkingLightMessageService = blinkingLightMessageService;
             this.motorRotationMessageService = rotationMessageService;
-            this.openedServices = false;
         }
     }
 
@@ -44,6 +43,7 @@ public class SharedServices {
         robotService.robotCloseAntennaLight();
         robotService.robotCloseSensor();
         robotService.unbindService();
+        this.openedServices = false;
     }
 
     @SuppressWarnings("unused")
@@ -56,6 +56,15 @@ public class SharedServices {
         robotService.robotCloseAntennaLight();
         robotService.robotOpenMotor();
         robotService.robotOpenSensor();
+        this.openedServices = true;
+    }
+
+    public void setOpenedServices(boolean openedServices) {
+        this.openedServices = openedServices;
+    }
+
+    public boolean isOpenedServices() {
+        return openedServices;
     }
 
     @SuppressWarnings("unused")

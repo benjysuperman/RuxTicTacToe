@@ -1,5 +1,6 @@
 package com.cybridz.ruxtictactoe;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,10 +15,10 @@ public class StartActivity extends AbstractActivity {
     @SuppressWarnings("FieldCanBeLocal")
     private Button start_button;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(LOGGER_KEY, getProperty(API, "SYSTEM_PROMPT"));
         setContentView(R.layout.start_activity);
         current_view = findViewById(R.id.start_activity);
         initializeServicesIfNeeded();
@@ -39,5 +40,6 @@ public class StartActivity extends AbstractActivity {
     @Override
     public void play() {
         Log.d(LOGGER_KEY, "playing start activity");
+        sharedServices.getRobotService().robotPlayTTs("Let's play Tic Tac Toe");
     }
 }

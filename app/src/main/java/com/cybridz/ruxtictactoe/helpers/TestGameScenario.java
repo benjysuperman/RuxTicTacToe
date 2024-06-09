@@ -20,6 +20,13 @@ public class TestGameScenario {
         this.game = game;
     }
 
+    public static void printResults(int symbol, Game game){
+        Log.d(LOGGER_KEY, "Rows : " + game.checkRowForWin(symbol));
+        Log.d(LOGGER_KEY, "Columns : " +  game.checkColumnForWin(symbol));
+        Log.d(LOGGER_KEY, "Diagonale : " + game.checkDiagonalForWin(symbol));
+        Log.d(LOGGER_KEY, "Inverse diagonale : " + game.checkInverseDiagonalForWin(symbol));
+    }
+
     private String getSymbolStr(int symbol){
         return symbol == GameActivity.ruxSymbol ? (GameActivity.ruxSymbol == Game.X ? "X" : "O") : (GameActivity.playerSymbol == Game.X ? "X" : "O");
     }
@@ -36,9 +43,9 @@ public class TestGameScenario {
             game.emptyBoard();
             testGameScenario.boardRowWin(symbol);
             Log.d(LOGGER_KEY, "Rux :\n=====\n");
-            game.printResults(ruxSymbol);
+            printResults(ruxSymbol, game);
             Log.d(LOGGER_KEY, "Player :\n========\n");
-            game.printResults(playerSymbol);
+            printResults(playerSymbol, game);
             Log.d(LOGGER_KEY, "Status : " + game.checkFinished(ruxSymbol, playerSymbol));
             Log.d(LOGGER_KEY, "\n\n");
 
@@ -46,9 +53,9 @@ public class TestGameScenario {
             game.emptyBoard();
             testGameScenario.boardColumnsWin(symbol);
             Log.d(LOGGER_KEY, "Rux :\n=====\n");
-            game.printResults(ruxSymbol);
+            printResults(ruxSymbol, game);
             Log.d(LOGGER_KEY, "Player :\n========\n");
-            game.printResults(playerSymbol);
+            printResults(playerSymbol, game);
             Log.d(LOGGER_KEY, "Status : " + game.checkFinished(ruxSymbol, playerSymbol));
             Log.d(LOGGER_KEY, "\n\n");
 
@@ -56,9 +63,9 @@ public class TestGameScenario {
             game.emptyBoard();
             testGameScenario.boardDiagonalWin(symbol);
             Log.d(LOGGER_KEY, "Rux :\n=====\n");
-            game.printResults(ruxSymbol);
+            printResults(ruxSymbol, game);
             Log.d(LOGGER_KEY, "Player :\n========\n");
-            game.printResults(playerSymbol);
+            printResults(playerSymbol, game);
             Log.d(LOGGER_KEY, "Status : " + game.checkFinished(ruxSymbol, playerSymbol));
             Log.d(LOGGER_KEY, "\n\n");
 
@@ -66,9 +73,9 @@ public class TestGameScenario {
             game.emptyBoard();
             testGameScenario.boardInverseDiagonalWin(symbol);
             Log.d(LOGGER_KEY, "Rux :\n=====\n");
-            game.printResults(ruxSymbol);
+            printResults(ruxSymbol, game);
             Log.d(LOGGER_KEY, "Player :\n========\n");
-            game.printResults(playerSymbol);
+            printResults(playerSymbol, game);
             Log.d(LOGGER_KEY, "Status : " + game.checkFinished(ruxSymbol, playerSymbol));
             Log.d(LOGGER_KEY, "\n\n");
 
@@ -77,9 +84,9 @@ public class TestGameScenario {
                 game.emptyBoard();
                 testGameScenario.boardFullGrid();
                 Log.d(LOGGER_KEY, "Rux :\n=====\n");
-                game.printResults(ruxSymbol);
+                printResults(ruxSymbol, game);
                 Log.d(LOGGER_KEY, "Player :\n========\n");
-                game.printResults(playerSymbol);
+                printResults(playerSymbol, game);
                 Log.d(LOGGER_KEY, "Status : " + game.checkFinished(ruxSymbol, playerSymbol));
                 Log.d(LOGGER_KEY, "\n\n");
 
@@ -87,9 +94,9 @@ public class TestGameScenario {
                 game.emptyBoard();
                 testGameScenario.boardPending();
                 Log.d(LOGGER_KEY, "Rux :\n=====\n");
-                game.printResults(ruxSymbol);
+                printResults(ruxSymbol, game);
                 Log.d(LOGGER_KEY, "Player :\n========\n");
-                game.printResults(playerSymbol);
+                printResults(playerSymbol, game);
                 Log.d(LOGGER_KEY, "Status : " + game.checkFinished(ruxSymbol, playerSymbol));
                 Log.d(LOGGER_KEY, "\n\n");
             }

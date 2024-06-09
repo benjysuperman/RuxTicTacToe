@@ -39,12 +39,17 @@ public abstract class AbstractActivity extends AppCompatActivity {
             Manifest.permission.CAMERA
     };
 
+    // Initials check
+    protected boolean networkOk = false;
+    protected boolean permissionsOk = false;
+    protected boolean servicesOk = false;
+    protected boolean barHidden = false;
+
+
     public static final int API = 0;
     public static final int SECRET = 1;
 
-    private static boolean permissions_check = false;
-
-    public static final String LOGGER_KEY = "ruxtictactoe";
+    public static final String LOGGER_KEY = "ruxtictactoe_logger_key";
     protected static final int REQUEST_CODE = 456728828;
 
     private static final Properties api_properties = (new Properties());
@@ -61,14 +66,16 @@ public abstract class AbstractActivity extends AppCompatActivity {
 
     protected View current_view;
 
-    protected Handler serviceLoadedHandler = new Handler(Looper.getMainLooper());
+    protected Handler serviceLoadedHandler = new Handler();
     protected Runnable serviceLoadedRunner = new Runnable() {
         @Override
         public void run() {
             if(sharedServices.getRobotService() != null && RobotHelper.isActive(sharedServices.getRobotService())){
+                Log.d(AbstractActivity.LOGGER_KEY, "Service open");
                 serviceLoadedHandler.removeCallbacks(this);
                 play();
             } else {
+                Log.d(AbstractActivity.LOGGER_KEY, "Trying open service");
                 serviceLoadedHandler.postDelayed(this, 1000);
             }
         }
@@ -89,8 +96,8 @@ public abstract class AbstractActivity extends AppCompatActivity {
 
     public abstract void play();
 
-    protected void checkNetwork(){
-        NetworkHelper.exitIfNetworkUnavailable(getSystemService(ConnectivityManager.class));
+    protected boolean checkNetwork(){
+        return NetworkHelper.exitIfNetworkUnavailable(getSystemService(ConnectivityManager.class));
     }
 
     @SuppressWarnings("all")
@@ -112,15 +119,17 @@ public abstract class AbstractActivity extends AppCompatActivity {
     }
 
     protected void initializeServicesIfNeeded(){
-        checkNetwork();
-        checkPermissions();
-        openServices();
-        AndroidGeneralLayoutHelper.hideBar(this);
+        serviceLoadedHandler.postDelayed(serviceLoadedRunner, 1000);
+        networkOk = checkNetwork();
+        permissionsOk = checkPermissions();
+        servicesOk = openServices();
+        barHidden = AndroidGeneralLayoutHelper.hideBar(this);
+        Log.d(LOGGER_KEY, "Network: " + networkOk + " Permissions: " + permissionsOk + " Services: " + servicesOk);
     }
 
-    protected void checkPermissions(){
-        if(permissions_check){
-            return;
+    protected boolean checkPermissions(){
+        if(permissionsOk){
+            return permissionsOk;
         }
         for (String permission : PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(AbstractActivity.this, permission) == PackageManager.PERMISSION_DENIED) {
@@ -128,15 +137,17 @@ public abstract class AbstractActivity extends AppCompatActivity {
                 break;
             }
         }
-        permissions_check = true;
+        return true;
     }
 
-    protected void openServices() {
+    protected boolean openServices() {
         if(sharedServices == null){
             Log.d(AbstractActivity.LOGGER_KEY, "In open service");
             RobotService robotService = RobotService.getInstance(this);
             sharedServices = new SharedServices(robotService, new BlinkingLightMessageService(robotService), new MotorRotationMessageService(robotService));
+            return sharedServices.isOpenedServices();
         }
+        return true;
     }
 
     public static boolean isTestMode() {

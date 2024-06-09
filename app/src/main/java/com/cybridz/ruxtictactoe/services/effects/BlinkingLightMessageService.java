@@ -63,7 +63,6 @@ public class BlinkingLightMessageService {
         AntennaLightMessage antennaLightMessage = new AntennaLightMessage();
         antennaLightMessage.set(lightValue);
         robotService.robotAntennaLight(antennaLightMessage);
-        //Log.d(AbstractActivity.LOGGER_KEY, "the light color is : " + lightValue);
     }
 
     private int getNewInterval() {
@@ -72,7 +71,7 @@ public class BlinkingLightMessageService {
 
     public void start() {
         stop();
-        blinkHandler = new Handler(Looper.getMainLooper());
+        blinkHandler = new Handler();
         blinkRunnable = new Runnable() {
             @Override
             public void run() {
