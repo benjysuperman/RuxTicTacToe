@@ -1,9 +1,8 @@
 package com.cybridz.ruxtictactoe.services.effects;
 
 import android.os.Handler;
-import android.util.Log;
+import android.os.Looper;
 
-import com.cybridz.ruxtictactoe.MainActivity;
 import com.cybridz.ruxtictactoe.enums.Light;
 import com.leitianpai.robotsdk.RobotService;
 import com.leitianpai.robotsdk.message.AntennaLightMessage;
@@ -24,7 +23,7 @@ public class BlinkingLightMessageService {
     private boolean isOff;
     protected int currentEarsColor;
 
-    public BlinkingLightMessageService(RobotService robotService){
+    public BlinkingLightMessageService(RobotService robotService) {
         this.robotService = robotService;
         this.isOff = false;
         this
@@ -32,7 +31,8 @@ public class BlinkingLightMessageService {
                 .setCurrentEarsColor(Light.getRandomLight());
     }
 
-    public BlinkingLightMessageService(RobotService robotService, int fromInterval, int toInterval){
+    @SuppressWarnings("unused")
+    public BlinkingLightMessageService(RobotService robotService, int fromInterval, int toInterval) {
         this.robotService = robotService;
         this.isOff = false;
         this
@@ -40,6 +40,7 @@ public class BlinkingLightMessageService {
                 .setCurrentEarsColor(Light.getRandomLight());
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public BlinkingLightMessageService setCurrentEarsColor(int currentEarsColor) {
         this.currentEarsColor = currentEarsColor;
         return this;
@@ -58,15 +59,14 @@ public class BlinkingLightMessageService {
         return this;
     }
 
-    protected void lightMessage(int lightValue){
+    protected void lightMessage(int lightValue) {
         AntennaLightMessage antennaLightMessage = new AntennaLightMessage();
         antennaLightMessage.set(lightValue);
         robotService.robotAntennaLight(antennaLightMessage);
-        Log.d(MainActivity.LOGGER_KEY, "the light color is : " + lightValue);
     }
 
-    private int getNewInterval(){
-        return isFixedInterval ?  fixedInterval : random.nextInt(toInterval - fromInterval) + fromInterval;
+    private int getNewInterval() {
+        return isFixedInterval ? fixedInterval : random.nextInt(toInterval - fromInterval) + fromInterval;
     }
 
     public void start() {
@@ -84,7 +84,7 @@ public class BlinkingLightMessageService {
     }
 
     public void stop() {
-        if(blinkHandler != null){
+        if (blinkHandler != null) {
             blinkHandler.removeCallbacks(blinkRunnable);
             blinkHandler = null;
             blinkRunnable = null;
@@ -93,12 +93,11 @@ public class BlinkingLightMessageService {
         lightMessage(OFF);
     }
 
-    public BlinkingLightMessageService setRandomEarColor() {
+    public void setRandomEarColor() {
         int color = Light.getRandomLight();
-        while ( color == Light.BLACK || color == currentEarsColor ){
+        while (color == Light.BLACK || color == currentEarsColor) {
             color = Light.getRandomLight();
         }
         currentEarsColor = color;
-        return this;
     }
 }
