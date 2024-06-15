@@ -21,15 +21,10 @@ public class StartActivity extends AbstractActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_activity);
         current_view = findViewById(R.id.start_activity);
-        initializeServicesIfNeeded();
+        initializeServices();
         start_button = findViewById(R.id.start_game);
         start_button.setText("Start");
-        start_button.setOnClickListener(view -> {
-            Log.d(LOGGER_KEY, "clicked start btn");
-            goToGameActivity();
-        });
-        sharedServices.getBlinkingLightMessageService().setRandomEarColor();
-        sharedServices.getBlinkingLightMessageService().start();
+        start_button.setOnClickListener(view -> goToGameActivity());
     }
 
     public void goToGameActivity(){
@@ -39,7 +34,11 @@ public class StartActivity extends AbstractActivity {
 
     @Override
     public void play() {
+        if (sharedServices.isOpenedServices()){
+            sharedServices.getBlinkingLightMessageService().setRandomEarColor();
+            sharedServices.getBlinkingLightMessageService().start();
+            sharedServices.getRobotService().robotPlayTTs("Let's play Tic Tac Toe");
+        }
         Log.d(LOGGER_KEY, "playing start activity");
-        sharedServices.getRobotService().robotPlayTTs("Let's play Tic Tac Toe");
     }
 }

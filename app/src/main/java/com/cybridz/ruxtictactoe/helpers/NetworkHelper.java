@@ -1,7 +1,6 @@
 package com.cybridz.ruxtictactoe.helpers;
 
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.cybridz.AbstractActivity;
@@ -14,33 +13,15 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class NetworkHelper {
-    /**
-     * Validates an IPv4 address.
-     *
-     * @param input the IP address as a String.
-     * @return true if the input parameter is a valid IPv4 address.
-     */
+
+    private final static Pattern IPV4_PATTERN = Pattern.compile("^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
+
     public static boolean isIPv4Address(String input) {
-        Pattern IPV4_PATTERN = Pattern.compile(
-                "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}" +
-                        "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
-        );
         return IPV4_PATTERN.matcher(input).matches();
     }
 
     public static boolean isNetworkAvailable(ConnectivityManager connectivityService) {
-        NetworkInfo activeNetworkInfo = connectivityService.getActiveNetworkInfo();
-        String ipv4 = getIPAddress();
-        return ipv4 != null && activeNetworkInfo != null && activeNetworkInfo.isConnected();
-
-    }
-
-    public static boolean exitIfNetworkUnavailable(ConnectivityManager connectivityManager) {
-        if (!isNetworkAvailable(connectivityManager)) {
-            Log.d(AbstractActivity.LOGGER_KEY, "No network");
-            return false;
-        }
-        return true;
+        return getIPAddress() != null && connectivityService.getActiveNetworkInfo() != null && connectivityService.getActiveNetworkInfo().isConnected();
     }
 
     public static String getIPAddress() {

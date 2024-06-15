@@ -12,6 +12,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.cybridz.AbstractActivity;
 import com.cybridz.ruxtictactoe.components.GameOver;
+import com.cybridz.ruxtictactoe.enums.Light;
 
 import java.util.Objects;
 
@@ -26,32 +27,27 @@ public class EndActivity extends AbstractActivity {
     private TextView message;
     @SuppressWarnings("FieldCanBeLocal")
     private ImageView image;
+    private GameOver gameOver;
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GameOver gameOver = (GameOver) getIntent().getSerializableExtra("gameOver");
+        gameOver = (GameOver) getIntent().getSerializableExtra("gameOver");
         setContentView(R.layout.restart_activity);
         current_view = findViewById(R.id.restart_activity);
-        initializeServicesIfNeeded();
-
+        initializeServices();
         image = findViewById(R.id.gameover);
         updateImageView(image, Objects.requireNonNull(gameOver).getImage());
-
         message = findViewById(R.id.message);
-        sharedServices.getRobotService().robotPlayTTs(gameOver.getMessage());
         String messageText = gameOver.getWinner() + "\n" + gameOver.getMessage();
         message.setText(messageText);
-
         restart_button = findViewById(R.id.restart_game);
         restart_button.setText("Restart");
         restart_button.setOnClickListener(view -> {
             Log.d(LOGGER_KEY, "clicked restart btn");
             goToStartActivity();
         });
-        sharedServices.getBlinkingLightMessageService().setRandomEarColor();
-        sharedServices.getMotorRotationMessageService().sendRandomMotorRotation();
     }
 
     private void updateImageView(ImageView imageView, String imageName) {
@@ -70,6 +66,9 @@ public class EndActivity extends AbstractActivity {
 
     @Override
     public void play() {
+        sharedServices.getBlinkingLightMessageService().setCurrentEarsColor(gameOver.getWinner().equalsIgnoreCase("RUX") ? Light.RED : (gameOver.getWinner().equalsIgnoreCase("PLAYER") ? Light.GREEN : Light.ORANGE));
+        sharedServices.getMotorRotationMessageService().sendRandomMotorRotation();
+        sharedServices.getRobotService().robotPlayTTs(gameOver.getMessage());
         Log.d(LOGGER_KEY, "playing restart activity");
     }
 }

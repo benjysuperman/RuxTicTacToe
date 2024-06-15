@@ -5,6 +5,7 @@ import static com.cybridz.AbstractActivity.LOGGER_KEY;
 import android.util.Log;
 
 import com.cybridz.AbstractActivity;
+import com.cybridz.ruxtictactoe.enums.PropertyType;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -83,8 +84,8 @@ public class Api {
         Response response = null;
         RequestBody body = RequestBody.create(requestPrompt, JSON_MEDIA_TYPE);
         Request request = new Request.Builder()
-                .url(activity.getProperty(AbstractActivity.API,"CHAT_ENDPOINT"))
-                .addHeader("Authorization", "Bearer " + activity.getProperty(AbstractActivity.SECRET,"OPENAI_API_KEY"))
+                .url(activity.getProperty(PropertyType.API,"CHAT_ENDPOINT"))
+                .addHeader("Authorization", "Bearer " + activity.getProperty(PropertyType.SECRET,"OPENAI_API_KEY"))
                 .addHeader("Content-Type", "application/json")
                 .post(body)
                 .build();
