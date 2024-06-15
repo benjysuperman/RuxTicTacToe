@@ -1,5 +1,9 @@
 package com.cybridz.ruxtictactoe.helpers;
 
+import android.util.Log;
+
+import com.cybridz.AbstractActivity;
+
 public class PromptHelper {
 
     public static String beginPromptRequest(){
@@ -30,11 +34,13 @@ public class PromptHelper {
     }
 
     public static String ruxLearnPrompt(String grid, int rux_symbol, int player_symbol) {
-        return makeJsonLine("user",
+        String learn_prompt = makeJsonLine("user",
                 "You can not place your symbol there the cell is already occupied " +
-                        "(only 0 is a permitted spot). Actual grid:" + grid +
+                        "(only 0 is a permitted choice in the grid). The actual grid: " + grid +
                         ",your_symbol:" + rux_symbol +
                         ",player_symbol:" + player_symbol);
+        Log.d(AbstractActivity.LOGGER_KEY, "sending lp:\n" + learn_prompt);
+        return learn_prompt;
     }
 
 
