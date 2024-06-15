@@ -1,5 +1,7 @@
 package com.cybridz.ruxtictactoe.services;
 
+import android.content.Context;
+
 import com.cybridz.ruxtictactoe.services.effects.BlinkingLightMessageService;
 import com.cybridz.ruxtictactoe.services.motors.MotorRotationMessageService;
 import com.leitianpai.robotsdk.RobotService;
@@ -14,13 +16,7 @@ public class SharedServices {
     private BlinkingLightMessageService blinkingLightMessageService;
     private MotorRotationMessageService motorRotationMessageService;
 
-    public SharedServices(RobotService robotService, BlinkingLightMessageService blinkingLightMessageService, MotorRotationMessageService rotationMessageService){
-        if(instance == null){
-            this.robotService = robotService;
-            this.blinkingLightMessageService = blinkingLightMessageService;
-            this.motorRotationMessageService = rotationMessageService;
-        }
-    }
+    private SharedServices(){}
 
     public RobotService getRobotService() {
         return robotService;
@@ -47,7 +43,7 @@ public class SharedServices {
     }
 
     @SuppressWarnings("unused")
-    public void resetStateServices(){
+    public void startServices(){
         if(robotService == null){
             return;
         }
@@ -59,16 +55,18 @@ public class SharedServices {
         this.openedServices = true;
     }
 
-    public void setOpenedServices(boolean openedServices) {
-        this.openedServices = openedServices;
-    }
-
     public boolean isOpenedServices() {
         return openedServices;
     }
 
-    @SuppressWarnings("unused")
-    public static SharedServices getInstance(){
+
+    public static SharedServices getInstance(Context context){
+        if(instance == null){
+            instance = new SharedServices();
+            instance.robotService = RobotService.getInstance(context);
+            instance.blinkingLightMessageService = new BlinkingLightMessageService(instance.robotService);
+            instance.motorRotationMessageService = new MotorRotationMessageService(instance.robotService);
+        }
         return instance;
     }
 }

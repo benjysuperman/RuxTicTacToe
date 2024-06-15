@@ -28,21 +28,21 @@ public class BlinkingLightMessageService {
         this.isOff = false;
         this
                 .setIsFixedInterval(500)
-                .setCurrentEarsColor(Light.getRandomLight());
-    }
-
-    @SuppressWarnings("unused")
-    public BlinkingLightMessageService(RobotService robotService, int fromInterval, int toInterval) {
-        this.robotService = robotService;
-        this.isOff = false;
-        this
-                .setRandomInterval(fromInterval, toInterval)
-                .setCurrentEarsColor(Light.getRandomLight());
+                .setRandomEarColor();
     }
 
     @SuppressWarnings("UnusedReturnValue")
     public BlinkingLightMessageService setCurrentEarsColor(int currentEarsColor) {
         this.currentEarsColor = currentEarsColor;
+        return this;
+    }
+
+    public BlinkingLightMessageService setRandomEarColor() {
+        int color = Light.getRandomLight();
+        while (color == Light.BLACK || color == currentEarsColor) {
+            color = Light.getRandomLight();
+        }
+        currentEarsColor = color;
         return this;
     }
 
@@ -93,11 +93,5 @@ public class BlinkingLightMessageService {
         lightMessage(OFF);
     }
 
-    public void setRandomEarColor() {
-        int color = Light.getRandomLight();
-        while (color == Light.BLACK || color == currentEarsColor) {
-            color = Light.getRandomLight();
-        }
-        currentEarsColor = color;
-    }
+
 }
