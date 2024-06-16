@@ -151,26 +151,7 @@ public class GameActivity extends AbstractActivity {
 
     private void rux_plays(boolean isRetry, boolean muted) {
         if( !muted ){
-            ExecutorService executor = Executors.newSingleThreadExecutor();
-            Future<?> future = executor.submit(() -> {
-                try {
-                    sharedServices.getRobotService().robotStartExpression("h0006");
-                    Thread.sleep(3000);
-                    sharedServices.getRobotService().robotStopExpression();
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    Log.e(LOGGER_KEY, Objects.requireNonNull(e.getMessage()));
-                } catch (Exception e) {
-                    Log.e(LOGGER_KEY, Objects.requireNonNull(e.getMessage()));
-                }
-            });
-            try {
-                future.get();
-            } catch (InterruptedException | ExecutionException e) {
-                Log.e(LOGGER_KEY, Objects.requireNonNull(e.getMessage()));
-            } finally {
-                executor.shutdown();
-            }
+            sharedServices.getRobotService().robotPlayTTs("My turn");
         }
         if (ruxAlgorithm.equals(GameMode.AI.getValue())) {
             ExecutorService executor = Executors.newSingleThreadExecutor();
