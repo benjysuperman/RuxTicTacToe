@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,9 +17,6 @@ import com.cybridz.ruxtictactoe.enums.GameStatus;
 import com.cybridz.ruxtictactoe.enums.PropertyType;
 import com.cybridz.ruxtictactoe.helpers.Api;
 import com.cybridz.ruxtictactoe.helpers.PromptHelper;
-import com.cybridz.ruxtictactoe.helpers.TestGameScenario;
-import com.leitianpai.robotsdk.message.ActionMessage;
-import com.letianpai.robot.letianpaiservice.LtpExpressionCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,7 +25,6 @@ import org.json.JSONObject;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.Callable;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -92,16 +86,17 @@ public class GameActivity extends AbstractActivity {
             api = new Api(this);
             api.loadClient();
             api.addPromptToHistory("system", PromptHelper.makeJsonLine("system", getProperty(PropertyType.API, "SYSTEM_PROMPT")));
+            api.addPromptToHistory("user", PromptHelper.makeJsonLine("user", getProperty(PropertyType.API, "GAME_RULES_PROMPT")));
         }
         pickRandomPlayers();
         player1View.setText("Rux");
         player2View.setText("Your");
-        player1SymbolView.setText(ruxSymbol == Game.X ? "X" : "O");
-        player2SymbolView.setText(playerSymbol == Game.X ? "X" : "O");
+        player1SymbolView.setText(ruxSymbol == Game.X ? Game.XStr : Game.OStr);
+        player2SymbolView.setText(playerSymbol == Game.X ? Game.XStr : Game.OStr);
         setCurrentPlayerTurnVisibility();
         String beginMessage = "Let's begin by " +
-                (currentSymbol == ruxSymbol ? "Me with the letter : " + (ruxSymbol == Game.X ? "X" : "O") :
-                "You with the letter : " + (playerSymbol == Game.X ? "X" : "O"));
+                (currentSymbol == ruxSymbol ? "Me with the letter : " + (ruxSymbol == Game.X ? Game.XStr : Game.OStr) :
+                "You with the letter : " + (playerSymbol == Game.X ? Game.XStr : Game.OStr));
         sharedServices.getRobotService().robotPlayTTs(beginMessage);
 
         if(currentSymbol == ruxSymbol) {
@@ -151,26 +146,7 @@ public class GameActivity extends AbstractActivity {
 
     private void rux_plays(boolean isRetry, boolean muted) {
         if( !muted ){
-            ExecutorService executor = Executors.newSingleThreadExecutor();
-            Future<?> future = executor.submit(() -> {
-                try {
-                    sharedServices.getRobotService().robotStartExpression("h0006");
-                    Thread.sleep(3000);
-                    sharedServices.getRobotService().robotStopExpression();
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    Log.e(LOGGER_KEY, Objects.requireNonNull(e.getMessage()));
-                } catch (Exception e) {
-                    Log.e(LOGGER_KEY, Objects.requireNonNull(e.getMessage()));
-                }
-            });
-            try {
-                future.get();
-            } catch (InterruptedException | ExecutionException e) {
-                Log.e(LOGGER_KEY, Objects.requireNonNull(e.getMessage()));
-            } finally {
-                executor.shutdown();
-            }
+            sharedServices.getRobotService().robotPlayTTs("My turn");
         }
         if (ruxAlgorithm.equals(GameMode.AI.getValue())) {
             ExecutorService executor = Executors.newSingleThreadExecutor();
