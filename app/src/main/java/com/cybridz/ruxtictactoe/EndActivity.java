@@ -11,9 +11,9 @@ import android.widget.TextView;
 import androidx.appcompat.content.res.AppCompatResources;
 
 import com.cybridz.AbstractActivity;
+import com.cybridz.ruxtictactoe.enums.GameStatus;
 import com.cybridz.ruxtictactoe.components.GameOver;
 import com.cybridz.ruxtictactoe.enums.Light;
-
 import java.util.Objects;
 
 public class EndActivity extends AbstractActivity {
@@ -66,9 +66,29 @@ public class EndActivity extends AbstractActivity {
 
     @Override
     public void play() {
+        sharedServices.getRobotService().robotOpenMotor();
         sharedServices.getBlinkingLightMessageService().setCurrentEarsColor(gameOver.getWinner().equalsIgnoreCase("RUX") ? Light.RED : (gameOver.getWinner().equalsIgnoreCase("PLAYER") ? Light.GREEN : Light.ORANGE));
         sharedServices.getMotorRotationMessageService().sendRandomMotorRotation();
         sharedServices.getRobotService().robotPlayTTs(gameOver.getMessage());
+        switch (gameOver.getWinner()){
+            case GameStatus.PLAYER_FINISHED:
+                sharedServices.getRobotService().robotStartExpression("h0211");
+                sharedServices.getRobotService().robotControlSound("a0115");
+                break;
+            case GameStatus.RUX_FINISHED:
+                sharedServices.getRobotService().robotStartExpression("h0027");
+                sharedServices.getRobotService().robotControlSound("a0039");
+                break;
+            case GameStatus.DRAW_FINISHED:
+                sharedServices.getRobotService().robotStartExpression("h0046");
+                sharedServices.getRobotService().robotControlSound("a0067");
+                break;
+            default:
+                sharedServices.getRobotService().robotStartExpression("h0210");
+                sharedServices.getRobotService().robotControlSound("a0112");
+                break;
+        }
+        sharedServices.getMotorRotationMessageService().sendRandomMotorRotation();
         Log.d(LOGGER_KEY, "playing restart activity");
     }
 }
