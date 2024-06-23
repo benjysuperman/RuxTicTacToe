@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings_activity"
+    android:layout_width="640dp"
+    android:layout_height="wrap_content"
+    android:maxWidth="640dp"
+    android:maxHeight="640dp"
+    android:minWidth="640dp"
+    android:minHeight="640dp"
+    tools:context=".SettingsActivity">
+
+    <ImageView
+        android:id="@+id/gameover"
+        android:layout_width="640dp"
+        android:layout_height="640dp"
+        android:minWidth="640dp"
+        android:minHeight="640dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/rux" />
+
+    <LinearLayout
+        android:id="@+id/innerGrid"
+        android:layout_width="480dp"
+        android:layout_height="640dp"
+        android:dividerPadding="10dp"
+        android:fontFamily="sans-serif"
+        android:minHeight="580dp"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="40dp"
+        app:columnCount="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="120dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Switch
+                android:id="@+id/opponent_inpt"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginRight="40dp"
+                android:scaleX="2"
+                android:scaleY="2" />
+
+            <TextView
+                android:id="@+id/ai_opponent_lbl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingTop="5dp"
+                android:text="AI"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:layout_marginTop="10dp"
+            android:minHeight="28dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/your_symbol_lbl"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:minHeight="28dp"
+                android:text="Your emoji"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="28dp" />
+
+            <TextView
+                android:id="@+id/opponent_symbol_lbl"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:minHeight="28dp"
+                android:text="Rux emoji"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:minHeight="100dp"
+            android:orientation="horizontal">
+
+            <GridView
+                android:id="@+id/your_symbol_grid"
+                android:layout_width="220dp"
+                android:layout_height="280dp"
+                android:background="@drawable/rect"
+                android:columnWidth="60dp"
+                android:horizontalSpacing="10dp"
+                android:numColumns="auto_fit"
+                android:padding="10dp"
+                android:rowHeight="60dp"
+                android:stretchMode="spacingWidth"
+                android:verticalSpacing="10dp" />
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="280dp" />
+
+            <GridView
+                android:id="@+id/opponent_symbol_grid"
+                android:layout_width="220dp"
+                android:layout_height="280dp"
+                android:background="@drawable/rect"
+                android:columnWidth="60dp"
+                android:horizontalSpacing="10dp"
+                android:numColumns="auto_fit"
+                android:padding="10dp"
+                android:rowHeight="60dp"
+                android:stretchMode="spacingWidth"
+                android:verticalSpacing="10dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/back_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:text="Back"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
