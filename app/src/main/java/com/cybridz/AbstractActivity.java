@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 
 import com.cybridz.ruxtictactoe.enums.Emoji;
 import com.cybridz.ruxtictactoe.enums.Permissions;
+import com.cybridz.ruxtictactoe.enums.Preferences;
 import com.cybridz.ruxtictactoe.enums.PropertyType;
 import com.cybridz.ruxtictactoe.helpers.AndroidGeneralLayoutHelper;
 import com.cybridz.ruxtictactoe.helpers.NetworkHelper;
@@ -60,6 +61,10 @@ public abstract class AbstractActivity extends AppCompatActivity {
 
     public String getProperty(PropertyType set, String key) {
         return properties.get(set).getProperty(key);
+    }
+
+    protected void initializePreferences(){
+        preferences = getSharedPreferences(Preferences.PREFERENCES_FILE, MODE_PRIVATE);
     }
 
     public abstract void play();

@@ -10,6 +10,7 @@ import android.widget.Switch;
 
 import com.cybridz.AbstractActivity;
 import com.cybridz.ruxtictactoe.adapters.BaseEmojiAdapter;
+import com.cybridz.ruxtictactoe.enums.Preferences;
 
 public class SettingsActivity extends AbstractActivity {
 
@@ -28,22 +29,22 @@ public class SettingsActivity extends AbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setting_activity);
-        preferences = getSharedPreferences("ruxtictactoe_app_preferences", MODE_PRIVATE);
+        preferences = getSharedPreferences(Preferences.PREFERENCES_FILE, MODE_PRIVATE);
         current_view = findViewById(R.id.settings_activity);
         initializeServices();
         yourGrid = findViewById(R.id.your_symbol_grid);
         ruxGrid = findViewById(R.id.opponent_symbol_grid);
-        BaseEmojiAdapter yourEmojiAdapter = new BaseEmojiAdapter(this, emojiList, preferences.getInt("x_emoji_position", 6),"x_emoji_position");
-        BaseEmojiAdapter ruxEmojiAdapter = new BaseEmojiAdapter(this, emojiList, preferences.getInt("y_emoji_position", 7), "y_emoji_position");
-        yourGrid.setAdapter(yourEmojiAdapter);
+        BaseEmojiAdapter playerEmojiAdapter = new BaseEmojiAdapter(this, emojiList, preferences.getInt(Preferences.PLAYER_KEY, Preferences.DEFAULT_PLAYER_POSITION),Preferences.PLAYER_KEY);
+        BaseEmojiAdapter ruxEmojiAdapter = new BaseEmojiAdapter(this, emojiList, preferences.getInt(Preferences.RUX_KEY, Preferences.DEFAULT_RUX_POSITION),Preferences.RUX_KEY);
+        yourGrid.setAdapter(playerEmojiAdapter);
         ruxGrid.setAdapter(ruxEmojiAdapter);
         backButton = findViewById(R.id.back_btn);
         backButton.setText("Back");
         backButton.setOnClickListener(view -> goToStartActivity());
         ai_switch = findViewById(R.id.opponent_inpt);
-        ai_switch.setChecked(preferences.getBoolean("use_ai", false));
+        ai_switch.setChecked(preferences.getBoolean(Preferences.AI_KEY, Preferences.DEFAULT_USE_AI));
         ai_switch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            preferences.edit().putBoolean("use_ai", isChecked).apply();
+            preferences.edit().putBoolean(Preferences.AI_KEY, isChecked).apply();
         });
     }
 

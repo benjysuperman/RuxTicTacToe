@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rules_activity"
+    android:layout_width="640dp"
+    android:layout_height="wrap_content"
+    android:maxWidth="640dp"
+    android:maxHeight="640dp"
+    android:minWidth="640dp"
+    android:minHeight="640dp"
+    tools:context=".RulesActivity">
+
+    <ImageView
+        android:id="@+id/gameover"
+        android:layout_width="640dp"
+        android:layout_height="640dp"
+        android:minWidth="640dp"
+        android:minHeight="640dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/rux" />
+
+    <LinearLayout
+        android:id="@+id/innerGrid"
+        android:layout_width="480dp"
+        android:layout_height="640dp"
+        android:dividerPadding="10dp"
+        android:fontFamily="sans-serif"
+        android:minHeight="580dp"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="40dp"
+        app:columnCount="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/rules_lbl"
+            android:layout_marginTop="120dp"
+            android:textSize="28sp"
+            android:maxHeight="400dp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+    </LinearLayout>
+    <Button
+        android:id="@+id/back_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:text="Back"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
