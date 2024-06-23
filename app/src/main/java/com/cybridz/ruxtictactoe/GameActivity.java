@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.cybridz.AbstractActivity;
+import com.cybridz.ruxtictactoe.adapters.BaseEmojiAdapter;
 import com.cybridz.ruxtictactoe.components.Cell;
 import com.cybridz.ruxtictactoe.components.GameOver;
 import com.cybridz.ruxtictactoe.enums.GameMode;
@@ -62,6 +63,7 @@ public class GameActivity extends AbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_activity);
+        preferences = getSharedPreferences("ruxtictactoe_app_preferences", MODE_PRIVATE);
         current_view = findViewById(R.id.game_activity);
         initializeServices();
         backButton = findViewById(R.id.back_btn);
@@ -80,8 +82,10 @@ public class GameActivity extends AbstractActivity {
         sharedServices.getMotorRotationMessageService().sendRandomMotorRotation();
         sharedServices.getBlinkingLightMessageService().setRandomEarColor();
         sharedServices.getBlinkingLightMessageService().start();
-        ruxAlgorithm = GameMode.AI.getValue();
+        ruxAlgorithm =  preferences.getBoolean("use_ai", true) ? GameMode.AI.getValue() : GameMode.ALGO.getValue();
         game = new Game(getResources(), getPackageName(), this);
+        Game.XStr = emojiList[preferences.getInt("x_emoji_position", 6)];
+        Game.OStr = emojiList[preferences.getInt("y_emoji_position", 7)];
         if (ruxAlgorithm.equals(GameMode.AI.getValue())) {
             api = new Api(this);
             api.loadClient();

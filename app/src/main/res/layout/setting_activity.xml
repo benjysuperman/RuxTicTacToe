@@ -10,7 +10,6 @@
     android:minWidth="640dp"
     android:minHeight="640dp"
     tools:context=".SettingsActivity">
-    <?xml version="1.0" encoding="utf-8"?>
 
     <ImageView
         android:id="@+id/gameover"
@@ -26,126 +25,55 @@
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/rux" />
 
-    <androidx.gridlayout.widget.GridLayout
+    <LinearLayout
+        android:id="@+id/innerGrid"
         android:layout_width="480dp"
         android:layout_height="640dp"
         android:dividerPadding="10dp"
         android:fontFamily="sans-serif"
         android:minHeight="580dp"
+        android:orientation="vertical"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingBottom="40dp"
         app:columnCount="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="480dp"
-            android:layout_height="130dp">
-
-            <Button
-                android:id="@+id/save_settings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="80dp"
-                android:fontFamily="sans-serif"
-                android:text="Save"
-                android:textAlignment="center"
-                android:textSize="18sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_gravity="clip_vertical|center_vertical|fill_vertical" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <TextView
-            android:id="@+id/name_lbl"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
-            android:text="Name"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/name_inpt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="text"
-            android:text="Name"
-            android:layout_marginBottom="10dp"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/openai_ai_api_key_lbl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Open Ai Api Key"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/open_ai_api_key_inpt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="text"
-            android:text="Key"
-            android:layout_marginBottom="10dp"
-            android:textSize="18sp" />
-
-        <Spinner
-            android:id="@+id/gpt_choices_inpt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="10dp"
-            android:paddingStart="10dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="10dp"
-            android:paddingEnd="10dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="10dp"
-            android:layout_marginBottom="10dp"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <com.google.android.material.chip.ChipGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingStart="10dp"
-            android:paddingTop="10dp"
-            android:paddingEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:paddingBottom="10dp">
+            android:layout_marginTop="80dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
 
             <Switch
                 android:id="@+id/opponent_inpt"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingTop="5dp"
-                android:switchPadding="20dp" />
+                android:layout_height="50dp"
+                android:layout_marginRight="40dp"
+                android:scaleX="2"
+                android:scaleY="2" />
 
             <TextView
                 android:id="@+id/ai_opponent_lbl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="AI as opponent"
-                android:textSize="18sp"
+                android:paddingTop="5dp"
+                android:text="AI"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
-        </com.google.android.material.chip.ChipGroup>
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="34dp"
+            android:layout_marginTop="10dp"
             android:minHeight="28dp"
             android:orientation="horizontal">
 
@@ -153,55 +81,77 @@
                 android:id="@+id/your_symbol_lbl"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
-                android:text="Your"
-                android:textAlignment="center"
                 android:minHeight="28dp"
-                android:textSize="18sp"
+                android:text="Your emoji"
+                android:textAlignment="center"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <Space
+            <View
                 android:layout_width="20dp"
-                android:minHeight="28dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:minHeight="28dp" />
 
             <TextView
                 android:id="@+id/opponent_symbol_lbl"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
-                android:text="Opponent"
-                android:textAlignment="center"
                 android:minHeight="28dp"
-                android:textSize="18sp"
+                android:text="Rux emoji"
+                android:textAlignment="center"
+                android:textSize="24sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:minHeight="100dp"
             android:orientation="horizontal">
 
             <GridView
                 android:id="@+id/your_symbol_grid"
                 android:layout_width="220dp"
-                android:layout_height="160dp"
-                android:horizontalSpacing="5dp"
+                android:layout_height="300dp"
+                android:background="@drawable/rect"
+                android:columnWidth="60dp"
+                android:horizontalSpacing="10dp"
                 android:numColumns="auto_fit"
-                android:padding="20dp" />
+                android:padding="10dp"
+                android:rowHeight="60dp"
+                android:stretchMode="spacingWidth"
+                android:verticalSpacing="10dp" />
 
-            <Space
+            <View
                 android:layout_width="20dp"
-                android:layout_height="160dp" />
+                android:layout_height="300dp" />
 
             <GridView
                 android:id="@+id/opponent_symbol_grid"
                 android:layout_width="220dp"
-                android:layout_height="160dp"
-                android:horizontalSpacing="5dp"
+                android:layout_height="300dp"
+                android:background="@drawable/rect"
+                android:columnWidth="60dp"
+                android:horizontalSpacing="10dp"
                 android:numColumns="auto_fit"
-                android:padding="20dp" />
+                android:padding="10dp"
+                android:rowHeight="60dp"
+                android:stretchMode="spacingWidth"
+                android:verticalSpacing="10dp" />
         </LinearLayout>
-    </androidx.gridlayout.widget.GridLayout>
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/back_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:text="Back"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

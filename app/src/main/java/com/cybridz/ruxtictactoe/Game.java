@@ -21,8 +21,8 @@ public class Game {
     public static final int UNSET = 0;
     public static final int O = 1;
     public static final int X = 2;
-    public static String XStr = "\uD83C\uDF38";
-    public static String OStr = "\uD83E\uDD84";
+    public static String XStr;
+    public static String OStr;
     private final Resources r;
     private final String packageName;
     private final AppCompatActivity activity;

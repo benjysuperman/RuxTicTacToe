@@ -1,6 +1,6 @@
 package com.cybridz;
 
-import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Handler;
@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.cybridz.ruxtictactoe.enums.Emoji;
 import com.cybridz.ruxtictactoe.enums.Permissions;
 import com.cybridz.ruxtictactoe.enums.PropertyType;
 import com.cybridz.ruxtictactoe.helpers.AndroidGeneralLayoutHelper;
@@ -26,10 +27,14 @@ public abstract class AbstractActivity extends AppCompatActivity {
 
     private static final boolean TEST_MODE = false;
 
+    protected static SharedPreferences preferences;
+
     protected static final String[] PERMISSIONS = Permissions.getPermissions();
 
     public static final String LOGGER_KEY = "ruxtictactoe_logger_key";
     protected static final int REQUEST_CODE = 456728828;
+
+    protected String[] emojiList = Emoji.getList();
 
     private static final Map<PropertyType, Properties> properties = PropertyType.getProperties();
 
