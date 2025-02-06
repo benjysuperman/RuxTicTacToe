@@ -18,7 +18,8 @@ public class StartActivity extends AbstractActivity {
     @SuppressWarnings("FieldCanBeLocal")
     private Button start_button;
     private Button game_settings_button;
-    private Button rules_button;;
+    private Button rules_button;
+    private Button speech_to_text_button;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -40,6 +41,10 @@ public class StartActivity extends AbstractActivity {
         rules_button = findViewById(R.id.rules_button);
         rules_button.setText("Rules");
         rules_button.setOnClickListener(view -> getGameRules());
+
+        speech_to_text_button = findViewById(R.id.speech_to_text_btn);
+        speech_to_text_button.setText("Speech to text");
+        speech_to_text_button.setOnClickListener(view -> getTestSpeechToText());
     }
 
     public void goToGameActivity(){
@@ -55,6 +60,11 @@ public class StartActivity extends AbstractActivity {
     public void getGameRules(){
         sharedServices.getBlinkingLightMessageService().stop();
         startActivity(new Intent(StartActivity.this, RulesActivity.class));
+    }
+
+    public void getTestSpeechToText(){
+        sharedServices.getBlinkingLightMessageService().stop();
+        startActivity(new Intent(StartActivity.this, TestSpeechToTextActivity.class));
     }
 
     @Override

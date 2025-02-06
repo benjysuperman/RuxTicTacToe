@@ -98,6 +98,7 @@ public class Api {
         } catch (IOException e) {
             Log.d(LOGGER_KEY, "Response execute error : " + e.getMessage());
         }
+        Log.d(LOGGER_KEY, response.toString());
         return response != null ? Objects.requireNonNull(response.body()).string() : null;
     }
 

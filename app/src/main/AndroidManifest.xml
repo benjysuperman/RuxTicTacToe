@@ -53,6 +53,9 @@
         <activity
             android:name=".RulesActivity"
             android:exported="false" />
+        <activity
+            android:name=".TestSpeechToTextActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

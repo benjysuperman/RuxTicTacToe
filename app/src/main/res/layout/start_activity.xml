@@ -50,4 +50,17 @@
         app:layout_constraintTop_toBottomOf="@+id/game_settings"
         app:layout_constraintVertical_bias="0.172" />
 
+    <Button
+        android:id="@+id/speech_to_text_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:text="Speech to text"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rules_button"
+        app:layout_constraintVertical_bias="0.212" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
