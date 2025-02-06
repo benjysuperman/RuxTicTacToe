@@ -51,9 +51,9 @@ public class TestSpeechToTextActivity extends AbstractActivity {
         is_recording = false;
         mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        fileName = getExternalCacheDir().getAbsolutePath() + "/audiorecordtest.3gp";
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.WEBM);
+        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.OPUS);
+        fileName = getExternalCacheDir().getAbsolutePath() + "/audiorecordtest.webm";
         mediaRecorder.setOutputFile(fileName);
         text.setText(Html.fromHtml("<h1 style='font-weight: bold;'>Speak</h1><p>Say something to test microphone</p>"));
     }
@@ -85,7 +85,12 @@ public class TestSpeechToTextActivity extends AbstractActivity {
         mediaRecorder.release();
         mediaRecorder = null;
         Log.d(LOGGER_KEY, "recording stopped");
-        playRecording();
+        try {
+            api.getSpeechToText(fileName, sharedServices);
+        } catch (IOException e){
+            Log.d(LOGGER_KEY, e.getMessage());
+        }
+        //playRecording();
     }
 
     private void playRecording() {
@@ -102,6 +107,7 @@ public class TestSpeechToTextActivity extends AbstractActivity {
                     // Playback has completed
                 }
             });
+            api.getSpeechToText(fileName, sharedServices);
             Log.d(LOGGER_KEY, "playing recording");
         } catch (IOException e) {
             e.printStackTrace();
@@ -124,7 +130,7 @@ public class TestSpeechToTextActivity extends AbstractActivity {
         if (sharedServices.isOpenedServices()) {
             sharedServices.getBlinkingLightMessageService().setRandomEarColor();
             sharedServices.getBlinkingLightMessageService().start();
-            sharedServices.getRobotService().robotPlayTTs("So wanna try speech to text ?");
+            //sharedServices.getRobotService().robotPlayTTs("So wanna try speech to text ?");
         }
         api = new Api(this);
         api.loadClient();
