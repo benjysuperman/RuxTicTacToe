@@ -16,7 +16,7 @@ import com.cybridz.ruxtictactoe.enums.GameMode;
 import com.cybridz.ruxtictactoe.enums.GameStatus;
 import com.cybridz.ruxtictactoe.enums.Preferences;
 import com.cybridz.ruxtictactoe.enums.PropertyType;
-import com.cybridz.ruxtictactoe.helpers.Api;
+import com.cybridz.ruxtictactoe.helpers.api.Api;
 import com.cybridz.ruxtictactoe.helpers.PromptHelper;
 
 import org.json.JSONArray;

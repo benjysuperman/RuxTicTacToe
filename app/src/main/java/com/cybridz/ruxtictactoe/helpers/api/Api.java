@@ -1,4 +1,4 @@
-package com.cybridz.ruxtictactoe.helpers;
+package com.cybridz.ruxtictactoe.helpers.api;
 
 import static com.cybridz.AbstractActivity.LOGGER_KEY;
 
@@ -6,6 +6,8 @@ import android.util.Log;
 
 import com.cybridz.AbstractActivity;
 import com.cybridz.ruxtictactoe.enums.PropertyType;
+import com.cybridz.ruxtictactoe.helpers.LoggerHelper;
+import com.cybridz.ruxtictactoe.helpers.PromptHelper;
 import com.cybridz.ruxtictactoe.services.SharedServices;
 
 import org.json.JSONObject;
@@ -17,6 +19,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -41,13 +47,13 @@ public class Api {
         this.activity = activity;
     }
 
-    public void loadClient(){
-        if(!isClientLoaded()){
+    public void loadClient() {
+        if (!isClientLoaded()) {
             client = new OkHttpClient();
         }
     }
 
-    public void addPromptToHistory(String role, String prompt){
+    public void addPromptToHistory(String role, String prompt) {
         rolePrompt.put(role, prompt);
     }
 
@@ -55,23 +61,24 @@ public class Api {
         rolePrompt.clear();
     }
 
-    public boolean isClientLoaded(){
+    public boolean isClientLoaded() {
         return client != null;
     }
 
-    public void closeClient(){
+    public void closeClient() {
         client = null;
         clearHistory();
     }
 
-    private void logHistory(){
+    private void logHistory() {
         Log.d(HISTORY_KEY, "-----------------------");
         for (Map.Entry<String, String> entry : rolePrompt.entrySet()) {
-          Log.d(HISTORY_KEY, "\nrole : " + entry.getKey()+ ", prompt: " + entry.getValue() + "\n");
-        };
+            Log.d(HISTORY_KEY, "\nrole : " + entry.getKey() + ", prompt: " + entry.getValue() + "\n");
+        }
+        ;
     }
 
-    public String makeRequestPrompt(){
+    public String makeRequestPrompt() {
         StringBuilder requestPrompt = new StringBuilder();
         requestPrompt.append(PromptHelper.beginPromptRequest());
         for (Map.Entry<String, String> entry : rolePrompt.entrySet()) {
@@ -84,16 +91,16 @@ public class Api {
     }
 
     public String sendRequest(String[] roles, String[] requestBody) throws IOException {
-        for (int i=0; i < roles.length; i++){
+        for (int i = 0; i < roles.length; i++) {
             addPromptToHistory(roles[i], requestBody[i]);
         }
         String requestPrompt = makeRequestPrompt();
         LoggerHelper.logWithLineNumber(LOGGER_KEY, 80, "Api.java", requestPrompt);
         Response response = null;
-        RequestBody body = RequestBody.create(requestPrompt, FORM_DATA_TYPE);
+        RequestBody body = RequestBody.create(requestPrompt, JSON_MEDIA_TYPE);
         Request request = new Request.Builder()
-                .url(activity.getProperty(PropertyType.API,"CHAT_ENDPOINT"))
-                .addHeader("Authorization", "Bearer " + activity.getProperty(PropertyType.SECRET,"OPENAI_API_KEY"))
+                .url(activity.getProperty(PropertyType.API, "CHAT_ENDPOINT"))
+                .addHeader("Authorization", "Bearer " + activity.getProperty(PropertyType.SECRET, "OPENAI_API_KEY"))
                 .addHeader("Content-Type", "application/json")
                 .post(body)
                 .build();
@@ -110,7 +117,40 @@ public class Api {
         return response != null ? Objects.requireNonNull(response.body()).string() : null;
     }
 
-    public void getSpeechToText(String fileName, SharedServices sharedServices) throws IOException {
+    public static boolean isSilent(File audioFile) {
+        boolean isSilent = true;
+        AudioInputStream audioInputStream = null;
+
+        try {
+            audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+            int bufferSize = 1024;
+            byte[] buffer = new byte[bufferSize];
+            int bytesRead;
+
+            while ((bytesRead = audioInputStream.read(buffer)) != -1) {
+                for (int i = 0; i < bytesRead; i++) {
+                    if (Math.abs(buffer[i]) > 10) { // Adjust the threshold as needed
+                        isSilent = false;
+                        break;
+                    }
+                }
+            }
+        } catch (UnsupportedAudioFileException | IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (audioInputStream != null) {
+                try {
+                    audioInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return isSilent;
+    }
+
+    public void getSpeechToText(String fileName, ApiResponseCallback callback) throws IOException {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
@@ -134,12 +174,13 @@ public class Api {
                     if (!response.isSuccessful()) {
                         throw new IOException("Unexpected code " + response);
                     }
-                    JSONObject jsonObject = new JSONObject( Objects.requireNonNull(response.body()).string());
+                    JSONObject jsonObject = new JSONObject(Objects.requireNonNull(response.body()).string());
                     String text_response = jsonObject.getString("text");
                     Log.d(LOGGER_KEY, text_response);
-                    sharedServices.getRobotService().robotPlayTTs(text_response);
+                    callback.onSuccess(text_response);
                 } catch (Exception e) {
                     Log.d(LOGGER_KEY, "Response execute error : " + e.getMessage());
+                    callback.onFailure(e);
                 }
                 Log.d(LOGGER_KEY, response.toString());
             }
